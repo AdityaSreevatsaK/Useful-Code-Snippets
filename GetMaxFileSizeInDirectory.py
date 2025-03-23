@@ -4,8 +4,15 @@ import os
 def get_max_file_size(folder_path):
     """
         Description: The get_max_file_size function scans a given folder (including its subdirectories) and identifies
-        the largest file based on size. It returns the file path and its size in bytes.
+                     the largest file based on size. It returns the file path and its size in bytes.
+
+        Args:
+            folder_path (str): The path to the folder to be scanned.
+
+        Returns:
+            tuple: A tuple containing the size of the largest file in bytes and its file path.
     """
+
     folder_path = folder_path.replace("\\", "/")
     max_size_value = 0
     max_file_value = None
