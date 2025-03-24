@@ -15,8 +15,8 @@ def text_to_speech(text: str = "Text to speech function invoked.", is_male: int 
     """
     engine = pyttsx3.init()
     voices = engine.getProperty(name='voices')  # Get available voices
-    is_male = 0 if is_male == 1 else 1  # Invert the value
-    engine.setProperty(name='voice', value=voices[is_male].id)  # Select voice (0: Male, 1: Female)
+    voice_type = 0 if is_male == 1 else 1
+    engine.setProperty(name='voice', value=voices[voice_type].id)  # Select voice (0: Male, 1: Female)
     engine.setProperty(name='rate', value=rate)  # Set speech rate
     engine.say(text=text)
     engine.runAndWait()
