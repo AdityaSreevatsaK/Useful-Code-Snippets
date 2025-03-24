@@ -19,3 +19,6 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 ### Automation & Productivity
 ✦ [Text to Speech Conversion](Text%20to%20Speech%20Conversion.py)<br />
 ✦ [Website Online Status](Webpage%20Online%20Status.py)<br />
+
+### Image Processing
+✦ [Convert Image to Grayscale](Convert%20Image%20to%20Grayscale.py)<br />
