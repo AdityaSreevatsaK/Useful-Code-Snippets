@@ -10,6 +10,7 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 ✦ [Convert PDF to images](PDF%20to%20Image.py)<br />
 ✦ [Convert PDF to Word Document](Convert%20PDF%20to%20Word%20Document.py) <br />
 ✦ [Convert Word Document to PDF](Convert%20Word%20Document%20to%20PDF.py) <br />
+✦ [Disk Space Usage](Disk%20Space%20Usage.py)<br />
 ✦ [Recursively Unzip and Delete](RecursivelyUnzip&DeleteZips.py)<br />
 
 ### Jupyter Notebook Utilities
