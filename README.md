@@ -6,19 +6,19 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 
 ## List of code snippets
 ### File Handling
-✦ [Get Max File Size in Directory](GetMaxFileSizeInDirectory.py)<br />
-✦ [Convert PDF to images](PDF%20to%20Image.py)<br />
-✦ [Convert PDF to Word Document](Convert%20PDF%20to%20Word%20Document.py) <br />
-✦ [Convert Word Document to PDF](Convert%20Word%20Document%20to%20PDF.py) <br />
-✦ [Disk Space Usage](Disk%20Space%20Usage.py)<br />
-✦ [Recursively Unzip and Delete](RecursivelyUnzip&DeleteZips.py)<br />
+✦ [Convert PDF to images](File%20Handling/PDF%20to%20Image.py)<br />
+✦ [Convert PDF to Word Document](File%20Handling/Convert%20PDF%20to%20Word%20Document.py) <br />
+✦ [Convert Word Document to PDF](File%20Handling/Convert%20Word%20Document%20to%20PDF.py) <br />
+✦ [Disk Space Usage](File%20Handling/Disk%20Space%20Usage.py)<br />
+✦ [Get Max File Size in Directory](File%20Handling/GetMaxFileSizeInDirectory.py)<br />
+✦ [Recursively Unzip and Delete](File%20Handling/RecursivelyUnzip&DeleteZips.py)<br />
 
 ### Jupyter Notebook Utilities
-✦ [Embed a YouTube Video into Jupyter Notebook](Embed%20A%20Youtube%20Video%20into%20JupyterNotebook.py)<br />
+✦ [Embed a YouTube Video into Jupyter Notebook](Jupyter%20Notebook/Embed%20A%20Youtube%20Video%20into%20JupyterNotebook.py)<br />
 
 ### Automation & Productivity
-✦ [Text to Speech Conversion](Text%20to%20Speech%20Conversion.py)<br />
-✦ [Website Online Status](Webpage%20Online%20Status.py)<br />
+✦ [Text to Speech Conversion](Automation%20&%20Productivity/Text%20to%20Speech%20Conversion.py)<br />
+✦ [Website Online Status](Automation%20&%20Productivity/Webpage%20Online%20Status.py)<br />
 
 ### Image Processing
-✦ [Convert Image to Grayscale](Convert%20Image%20to%20Grayscale.py)<br />
+✦ [Convert Image to Grayscale](Image%20Processing/Convert%20Image%20to%20Grayscale.py)<br />
