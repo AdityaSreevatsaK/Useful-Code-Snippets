@@ -5,6 +5,10 @@ Useful-Code-Snippets is a collection of practical and reusable code snippets for
 It serves as a handy reference for automating, optimising, and simplifying common operations across different domains.
 
 ## List of code snippets
+### Automation & Productivity
+✦ [Text to Speech Conversion](Automation%20&%20Productivity/Text%20to%20Speech%20Conversion.py)<br />
+✦ [Website Online Status](Automation%20&%20Productivity/Webpage%20Online%20Status.py)<br />
+
 ### File Handling
 ✦ [Convert PDF to images](File%20Handling/PDF%20to%20Image.py)<br />
 ✦ [Convert PDF to Word Document](File%20Handling/Convert%20PDF%20to%20Word%20Document.py) <br />
@@ -13,15 +17,14 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 ✦ [Get Max File Size in Directory](File%20Handling/GetMaxFileSizeInDirectory.py)<br />
 ✦ [Recursively Unzip and Delete](File%20Handling/RecursivelyUnzip&DeleteZips.py)<br />
 
-### Jupyter Notebook Utilities
-✦ [Embed a YouTube Video into Jupyter Notebook](Jupyter%20Notebook/Embed%20A%20Youtube%20Video%20into%20JupyterNotebook.py)<br />
-
-### Automation & Productivity
-✦ [Text to Speech Conversion](Automation%20&%20Productivity/Text%20to%20Speech%20Conversion.py)<br />
-✦ [Website Online Status](Automation%20&%20Productivity/Webpage%20Online%20Status.py)<br />
+### Git Utilities
+✦ [Useful Git Commands](Git%20Utilities/Useful%20Git%20Commands.md)<br />
 
 ### Image Processing
 ✦ [Convert Image to Grayscale](Image%20Processing/Convert%20Image%20to%20Grayscale.py)<br />
 
-### Git Utilities
-✦ [Useful Git Commands](Git%20Utilities/Useful%20Git%20Commands.md)<br />
+### Jupyter Notebook Utilities
+✦ [Embed a YouTube Video into Jupyter Notebook](Jupyter%20Notebook/Embed%20A%20Youtube%20Video%20into%20JupyterNotebook.py)<br />
+
+### Regex Cheatsheet
+✦ [Extract Dates](Regex%20Cheatsheet/Extract%20Dates.py)<br />
