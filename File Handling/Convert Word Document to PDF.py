@@ -3,7 +3,8 @@ from docx2pdf import convert
 
 def convert_word_doc_to_pdf(word_folder_path: str, pdf_folder_path: str = None):
     """
-        Description: This function is used to convert the Word document to PDF.
+        Description:
+            This function is used to convert the Word document to PDF.
 
         Args:
             word_folder_path (str): The path to the folder containing the Word document(s) to be converted.

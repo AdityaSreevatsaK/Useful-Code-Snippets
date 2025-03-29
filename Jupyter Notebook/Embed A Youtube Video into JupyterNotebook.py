@@ -3,7 +3,8 @@ from IPython.display import YouTubeVideo
 
 def play_youtube_video(youtube_video_id: str, width_value: int = 800, height_value: int = 450):
     """
-        Description: Embed a YouTube video in a Jupyter Notebook.
+        Description:
+            Embed a YouTube video in a Jupyter Notebook.
 
         Args:
             youtube_video_id (str): The ID of the YouTube video to be embedded.

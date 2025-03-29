@@ -4,9 +4,15 @@ from zipfile import BadZipFile, ZipFile
 
 def unzip_and_delete(folder_path):
     """
-        Description: The unzip_and_delete function recursively scans a given folder for .zip files, extracts their
-        contents to the same folder, and then deletes the original .zip file. It handles bad zip files and already
-        deleted files gracefully, printing relevant messages during the process.
+        Description:
+            This function recursively unzips files in the specified folder and deletes the original .zip files.
+            If a .zip file contains another .zip file, it will continue to unzip until there are no more .zip files.
+
+        Args:
+            folder_path (str): The path to the folder to be scanned for .zip files.
+
+        Returns:
+            None
     """
     for root, dirs, files in os.walk(folder_path):
         for file in files:

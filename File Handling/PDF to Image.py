@@ -7,9 +7,12 @@ from pdf2image import convert_from_path
 
 def convert_pdf_to_images(folder_path: str):
     """
-        Description: This function converts each page of a PDF file to images.
+        Description:
+            This function converts each page of a PDF file to images.
+
         Args:
             folder_path: The path to the folder containing the PDF file.
+
         Returns:
             None
     """

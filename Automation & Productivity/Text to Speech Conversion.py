@@ -3,15 +3,16 @@ import pyttsx3
 
 def text_to_speech(text: str = "Text to speech function invoked.", is_male: int = False, rate: int = 200):
     """
-    Description: Convert text to speech using the pyttsx3 library.
+        Description:
+            Convert text to speech using the pyttsx3 library.
 
-    Args:
-        text (str, optional): The text to be converted to speech. Defaults to "Text to speech function invoked.".
-        is_male (int, optional): Flag to select the voice gender. 0 for male, 1 for female. Defaults to False (0).
-        rate (int, optional): The speech rate (words per minute). Defaults to 200.
+        Args:
+            text (str, optional): The text to be converted to speech. Defaults to "Text to speech function invoked.".
+            is_male (int, optional): Flag to select the voice gender. 0 for male, 1 for female. Defaults to False (0).
+            rate (int, optional): The speech rate (words per minute). Defaults to 200.
 
-    Returns:
-        None
+        Returns:
+            None
     """
     engine = pyttsx3.init()
     voices = engine.getProperty(name='voices')  # Get available voices

@@ -3,7 +3,8 @@ from pdf2docx import Converter
 
 def convert_pdf_to_word(pdf_file_path: str, word_file_path: str):
     """
-        Description: This function is used to convert the PDF document to Word document.
+        Description:
+            This function is used to convert the PDF document to Word document.
 
         Args:
             pdf_file_path (str): The path to the PDF document to be converted.

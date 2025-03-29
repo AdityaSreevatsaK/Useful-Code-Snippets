@@ -4,14 +4,15 @@ import matplotlib.pyplot as plt
 
 def convert_and_display(image_path: str, output_path: str = "Grayscale.png") -> None:
     """
-    Description: Convert an image to grayscale, save it, and display both the images side by side.
+        Description:
+            Convert an image to grayscale, save it, and display both the images side by side.
 
-    Args:
-        image_path (str): The path to the input image.
-        output_path (str, optional): The path to save the grayscale image. Defaults to "Grayscale.png".
+        Args:
+            image_path (str): The path to the input image.
+            output_path (str, optional): The path to save the grayscale image. Defaults to "Grayscale.png".
 
-    Returns:
-        None
+        Returns:
+            None
     """
     # Read the image
     image = cv2.imread(image_path)

@@ -3,13 +3,14 @@ import requests
 
 def is_website_online(url):
     """
-    Description: Check if a website is online by sending a GET request.
+        Description:
+            Check if a website is online by sending a GET request.
 
-    Args:
-        url (str): The URL of the website to check.
+        Args:
+            url (str): The URL of the website to check.
 
-    Returns:
-        bool: True if the website is online (status code 200), False otherwise.
+        Returns:
+            bool: True if the website is online (status code 200), False otherwise.
     """
     try:
         response = requests.get(url, timeout=5)
