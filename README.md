@@ -32,3 +32,4 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 ✦ [Extract URLs](Regex%20Cheatsheet/Extract%20URLs.py)<br />
 ✦ [Find Phone Numbers](Regex%20Cheatsheet/Find%20Phone%20Numbers.py)<br />
 ✦ [Remove Extra Spaces](Regex%20Cheatsheet/Remove%20Extra%20Spaces.py)<br />
+✦ [Validate Email](Regex%20Cheatsheet/Validate%20Email.py)<br />
