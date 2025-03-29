@@ -30,3 +30,4 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 ✦ [Extract Dates](Regex%20Cheatsheet/Extract%20Dates.py)<br />
 ✦ [Extract Hashtags](Regex%20Cheatsheet/Extract%20Hashtags.py)<br />
 ✦ [Extract URLs](Regex%20Cheatsheet/Extract%20URLs.py)<br />
+✦ [Find Phone Numbers](Regex%20Cheatsheet/Find%20Phone%20Numbers.py)<br />
