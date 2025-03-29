@@ -22,3 +22,6 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 
 ### Image Processing
 ✦ [Convert Image to Grayscale](Image%20Processing/Convert%20Image%20to%20Grayscale.py)<br />
+
+### Git Utilities
+✦ [Useful Git Commands](Git%20Utilities/Useful%20Git%20Commands.md)<br />
