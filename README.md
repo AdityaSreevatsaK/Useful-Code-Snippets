@@ -23,6 +23,7 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 ### Image Processing
 ✦ [Convert Image to Grayscale](Image%20Processing/Convert%20Image%20to%20Grayscale.py)<br />
 ✦ [Compress Images](Image%20Processing/Compress%20Images.py)<br />
+✦ [Convert Image Format](Image%20Processing/Convert%20Image%20Format.py)<br />
 ✦ [Resize all images in a folder](Image%20Processing/Resize%20All%20Images%20In%20Folder.py)<br />
 
 ### Jupyter Notebook Utilities
