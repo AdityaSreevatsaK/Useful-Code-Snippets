@@ -14,6 +14,7 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 ✦ [Convert PDF to Word Document](File%20Handling/Convert%20PDF%20to%20Word%20Document.py) <br />
 ✦ [Convert Word Document to PDF](File%20Handling/Convert%20Word%20Document%20to%20PDF.py) <br />
 ✦ [Disk Space Usage](File%20Handling/Disk%20Space%20Usage.py)<br />
+✦ [Generate File Tree as Text](File%20Handling/Generate%20File%20Tree%20as%20Text.py)<br />
 ✦ [Get Max File Size in Directory](File%20Handling/GetMaxFileSizeInDirectory.py)<br />
 ✦ [Recursively Unzip and Delete](File%20Handling/RecursivelyUnzip&DeleteZips.py)<br />
 
