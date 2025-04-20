@@ -22,6 +22,7 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 
 ### Image Processing
 ✦ [Convert Image to Grayscale](Image%20Processing/Convert%20Image%20to%20Grayscale.py)<br />
+✦ [Compress Images](Image%20Processing/Compress%20Images.py)<br />
 
 ### Jupyter Notebook Utilities
 ✦ [Embed a YouTube Video into Jupyter Notebook](Jupyter%20Notebook/Embed%20A%20Youtube%20Video%20into%20JupyterNotebook.py)<br />
