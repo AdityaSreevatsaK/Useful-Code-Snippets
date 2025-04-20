@@ -18,6 +18,7 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 ✦ [Recursively Unzip and Delete](File%20Handling/RecursivelyUnzip&DeleteZips.py)<br />
 
 ### Git Utilities
+✦ [Check Git Repo Status](Git%20Utilities/Check%20Git%20Repo%20Status.py)<br />
 ✦ [Useful Git Commands](Git%20Utilities/Useful%20Git%20Commands.md)<br />
 
 ### Image Processing
