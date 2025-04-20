@@ -18,6 +18,7 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 ✦ [Get Max File Size in Directory](File%20Handling/GetMaxFileSizeInDirectory.py)<br />
 ✦ [Merge Multiple PDFs into One](File%20Handling/Merge%20Multiple%20PDFs%20into%20One.py)<br />
 ✦ [Recursively Unzip and Delete](File%20Handling/RecursivelyUnzip&DeleteZips.py)<br />
+✦ [Split PDF into Single Pages](File%20Handling/Split%20PDF%20into%20Single%20Pages.py)<br />
 
 ### Git Utilities
 ✦ [Check Git Repo Status](Git%20Utilities/Check%20Git%20Repo%20Status.py)<br />
