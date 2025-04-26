@@ -6,6 +6,7 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 
 ## List of code snippets
 ### Automation & Productivity
+✦ [Logging Setup](Automation%20&%20Productivity/Logging%20Setup.py)<br />
 ✦ [Text to Speech Conversion](Automation%20&%20Productivity/Text%20to%20Speech%20Conversion.py)<br />
 ✦ [Website Online Status](Automation%20&%20Productivity/Webpage%20Online%20Status.py)<br />
 
