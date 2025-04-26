@@ -16,6 +16,7 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 ✦ [Convert Word Document to PDF](File%20Handling/Convert%20Word%20Document%20to%20PDF.py) <br />
 ✦ [Disk Space Usage](File%20Handling/Disk%20Space%20Usage.py)<br />
 ✦ [Encrypt & Decrypt Files](File%20Handling/Encrypt%20and%20Decrypt%20Files.py)<br />
+✦ [File Compression-Decompression (ZIP)](File%20Handling/File%20Compression-Decompression%20(ZIP).py)<br />
 ✦ [Generate File Tree as Text](File%20Handling/Generate%20File%20Tree%20as%20Text.py)<br />
 ✦ [Get Max File Size in Directory](File%20Handling/GetMaxFileSizeInDirectory.py)<br />
 ✦ [Merge Multiple PDFs into One](File%20Handling/Merge%20Multiple%20PDFs%20into%20One.py)<br />
