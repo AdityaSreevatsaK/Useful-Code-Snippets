@@ -35,7 +35,7 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 ✦ [Resize all images in a folder](Image%20Processing/Resize%20All%20Images%20In%20Folder.py)<br />
 
 ### Jupyter Notebook Utilities
-✦ [Embed a YouTube Video into Jupyter Notebook](Jupyter%20Notebook/Embed%20A%20Youtube%20Video%20into%20JupyterNotebook.py)<br />
+✦ [Embed a YouTube Video into Jupyter Notebook](Jupyter%20Notebook%20Utilities/Embed%20A%20Youtube%20Video%20into%20JupyterNotebook.py)<br />
 
 ### Regex Cheatsheet
 ✦ [Extract Dates](Regex%20Cheatsheet/Extract%20Dates.py)<br />
