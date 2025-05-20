@@ -6,7 +6,6 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 
 ## List of code snippets
 ### Automation & Productivity
-✦ [Get Names of All Repos on GitHub Profile](Automation%20&%20Productivity/Get%20Names%20of%20All%20Repos%20on%20GitHub%20Profile.py)<br />
 ✦ [Logging Setup](Automation%20&%20Productivity/Logging%20Setup.py)<br />
 ✦ [Text to Speech Conversion](Automation%20&%20Productivity/Text%20to%20Speech%20Conversion.py)<br />
 ✦ [Website Online Status](Automation%20&%20Productivity/Webpage%20Online%20Status.py)<br />
@@ -26,6 +25,7 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 
 ### Git Utilities
 ✦ [Check Git Repo Status](Git%20Utilities/Check%20Git%20Repo%20Status.py)<br />
+✦ [Get Names of All Repos on GitHub Profile](Git%20Utilities/Get%20Names%20of%20All%20Repos%20on%20GitHub%20Profile.py)<br />
 ✦ [Useful Git Commands](Git%20Utilities/Useful%20Git%20Commands.md)<br />
 
 ### Image Processing
