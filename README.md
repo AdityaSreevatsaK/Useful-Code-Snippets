@@ -42,6 +42,11 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 
 ---
 
+### Audio & Speech Processing
+✦ [Voice Pitch Analyzer](Audio%20&%20Speech%20Processing/Voice%20Pitch%20Analyser.py)<br />
+
+---
+
 ### Jupyter Notebook Utilities
 ✦ [Convert Jupyter Notebook to a Cleaned Python File](Jupyter%20Notebook%20Utilities/Convert%20Jupyter%20Notebook%20to%20a%20Cleaned%20Python%20File.py)<br />
 ✦ [Embed a YouTube Video into Jupyter Notebook](Jupyter%20Notebook%20Utilities/Embed%20A%20Youtube%20Video%20into%20JupyterNotebook.py)<br />
