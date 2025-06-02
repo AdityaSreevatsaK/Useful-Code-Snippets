@@ -25,7 +25,7 @@ except KeyboardInterrupt:
     sd.stop()
 
 # 3. Pitch-tracking (librosa.pyin)
-LOW_NOTE = 'C2'  # ≈65 Hz
+LOW_NOTE = 'C2'   # ≈65 Hz
 HIGH_NOTE = 'C6'  # ≈1 kHz
 
 print("Analyzing pitch…")
