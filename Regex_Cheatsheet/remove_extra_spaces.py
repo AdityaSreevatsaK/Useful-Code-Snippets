@@ -16,6 +16,3 @@ def remove_extra_spaces(text: str) -> str:
     # Regular expression pattern to match multiple spaces
     pattern = r'\s+'
     return re.sub(pattern, ' ', text).strip()
-
-
-print(remove_extra_spaces("This   is  a    test."))

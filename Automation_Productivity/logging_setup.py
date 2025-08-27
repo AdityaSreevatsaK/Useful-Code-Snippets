@@ -13,8 +13,3 @@ def setup_logging():
     - Format: %(asctime)s - %(levelname)s - %(message)s
     """
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-
-setup_logging()
-logging.info("This is an info message.")
-logging.error("This is an error message.")

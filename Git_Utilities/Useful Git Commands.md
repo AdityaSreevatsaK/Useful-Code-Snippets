@@ -1,4 +1,3 @@
-# Useful Git Commands
 ## Basic Commands  
 - `git init` – Initialise a new repository  
 - `git clone <repo_url>` – Clone an existing repository  

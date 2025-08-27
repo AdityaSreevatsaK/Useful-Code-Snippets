@@ -20,8 +20,3 @@ def generate_file_tree(path, indent='~'):
         print(indent + '├── ' + item)
         if os.path.isdir(full_path):
             generate_file_tree(full_path, indent + '│   ')
-
-
-folder_path = '.'
-print(f"Folder: {os.path.abspath(folder_path)}")
-# generate_file_tree(folder_path)

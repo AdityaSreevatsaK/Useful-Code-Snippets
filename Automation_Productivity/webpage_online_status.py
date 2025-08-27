@@ -13,16 +13,15 @@ def is_website_online(url):
             bool: True if the website is online (status code 200), False otherwise.
     """
     try:
-        response = requests.get(url, timeout=5)
+        response = requests.get(url, timeout=5, headers={"User-Agent": "Mozilla/5.0"})
         status_code = response.status_code == 200
     except requests.exceptions.RequestException:
         status_code = False
 
     if status_code:
         print(f"{url} is online.")
+        return True
     else:
         print(f"{url} is offline.")
+        return False
 
-
-# Example usage
-is_website_online("https://www.google.com")

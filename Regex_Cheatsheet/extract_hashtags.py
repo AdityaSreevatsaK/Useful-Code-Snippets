@@ -14,6 +14,3 @@ def extract_hashtags(text: str) -> list:
     """
     pattern = r'#\w+'
     return re.findall(pattern, text)
-
-
-print(extract_hashtags("Loving the #MachineLearning and #AI trends!"))

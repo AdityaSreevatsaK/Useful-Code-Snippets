@@ -16,6 +16,3 @@ def find_phone_numbers(text: str) -> list:
     # Regular expression pattern to match phone numbers with exactly 10 digits
     pattern = r'\b\d{10}\b'
     return re.findall(pattern, text)
-
-
-print(find_phone_numbers("Call me at 9876543210 or 1234567890."))

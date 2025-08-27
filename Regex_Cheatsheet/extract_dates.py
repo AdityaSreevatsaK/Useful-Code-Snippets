@@ -14,6 +14,3 @@ def extract_dates(text: str) -> list:
      """
     pattern = r'\b\d{1,2}[-/]\d{1,2}[-/]\d{4}\b'
     return re.findall(pattern, text)
-
-
-print(extract_dates("Important dates: 12-05-2023, 03/11/2022."))

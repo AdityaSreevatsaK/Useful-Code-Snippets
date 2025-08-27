@@ -15,6 +15,3 @@ def extract_urls(text: str) -> list:
     # Pattern to match URLs
     pattern = r'https?://(?:www\.)?\S+'
     return re.findall(pattern, text)
-
-
-print(extract_urls("Visit https://example.com and http://test.com for details."))
