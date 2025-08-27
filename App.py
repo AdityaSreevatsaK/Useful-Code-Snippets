@@ -1,3 +1,4 @@
+import io
 import os
 import sys
 import tempfile
@@ -28,7 +29,6 @@ from Image_Processing import (
     compress_image_by_percentage,
     convert_and_display_grayscale,
     convert_image_format,
-    resize_all_images_in_folder,
 )
 from Jupyter_Notebook_Utilities import (
     convert_notebook_to_clean_py,
@@ -166,7 +166,7 @@ elif selection == "File Handling":
             tmp_pdf.write(pdf_to_img_file.getvalue())
             images = convert_pdf_to_images.convert_pdf_to_images(tmp_pdf.name)
             for i, image in enumerate(images):
-                st.image(image, caption=f"Page {i + 1}", use_column_width=True)
+                st.image(image, caption=f"Page {i + 1}", use_container_width=True)
 
     st.subheader("🔄 Convert Word Document to PDF")
     word_to_pdf_file = st.file_uploader(
@@ -207,7 +207,8 @@ elif selection == "File Handling":
 
     st.subheader("💾 Check Disk Usage")
     path_to_check = st.text_input("Enter path to check disk usage:", "/")
-    st.info("Note: This utility is most useful for local usage as it checks the disk usage of the machine running the Streamlit app.")
+    st.info(
+        "Note: This utility is most useful for local usage as it checks the disk usage of the machine running the Streamlit app.")
     if st.button("Check Disk Usage"):
         try:
             total, used, free = check_disk_usage.check_disk_usage(path_to_check)
@@ -221,7 +222,8 @@ elif selection == "File Handling":
     folder_to_scan = st.text_input(
         "Enter folder path to find the largest file:", "."
     )
-    st.info("Note: This utility is most useful for local usage as it scans the file system of the machine running the Streamlit app.")
+    st.info(
+        "Note: This utility is most useful for local usage as it scans the file system of the machine running the Streamlit app.")
     if st.button("Find Largest File"):
         max_size, max_file = get_max_file_size.get_max_file_size(folder_to_scan)
         st.write(f"The largest file is: {max_file}")
@@ -244,7 +246,8 @@ elif selection == "File Handling":
                 st.download_button("Download Merged PDF", f, file_name="merged.pdf")
 
     st.subheader("🔓 Recursively Unzip and Delete ZIPs")
-    st.info("Note: This utility is most useful for local usage as it extracts all files from ZIPs and deletes the ZIP archives themselves.")
+    st.info(
+        "Note: This utility is most useful for local usage as it extracts all files from ZIPs and deletes the ZIP archives themselves.")
     zip_to_unzip = st.file_uploader(
         "Upload a zip file to recursively unzip", type="zip", key="unzip_recursive"
     )
@@ -270,7 +273,8 @@ elif selection == "File Handling":
             st.success("PDF split successfully")
 
     st.subheader("🗂️ Generate File Tree")
-    st.info("Note: This utility is most useful for local usage as it generates the tree structure of directories on the machine running the Streamlit app.")
+    st.info(
+        "Note: This utility is most useful for local usage as it generates the tree structure of directories on the machine running the Streamlit app.")
     path_to_tree = st.text_input(
         "Enter a directory path to generate its tree structure:", "."
     )
@@ -287,6 +291,7 @@ elif selection == "Git Utilities":
 
     st.subheader("✅ Check Git Repo Status")
     if st.button("Check Git Status"):
+        st.info("Note: This utility is most useful for local usage and will not work on deployed websites.")
         if check_git_repo_status.is_git_repo_clean():
             st.success("Repository is clean.")
         else:
@@ -298,7 +303,7 @@ elif selection == "Git Utilities":
     )
     if st.button("Get Repos"):
         if github_token:
-            repos = get_github_repos.get_all_repos()
+            repos = get_github_repos.get_all_repos(github_token)
             st.write(repos)
         else:
             st.warning("Please enter a GitHub token.")
@@ -333,74 +338,128 @@ elif selection == "Hugging Face Utilities":
 # -----------------------------------------------------------------------------
 elif selection == "Image Processing":
     st.header("Image Processing")
+
     uploaded_image = st.file_uploader(
-        "Upload an image", type=["png", "jpg", "jpeg"]
+        "Upload a single image for processing", type=["png", "jpg", "jpeg"]
     )
 
-    if uploaded_image:
-        st.image(uploaded_image, caption="Original Image", width=300)
-        img = Image.open(uploaded_image)
+    st.divider()
 
-        st.subheader("🔳 Convert to Grayscale")
-        if st.button("Convert to Grayscale"):
-            gray_image = convert_and_display_grayscale.convert_and_display(
-                uploaded_image
-            )
-            st.image(gray_image, caption="Grayscale Image", width=300)
+    # --- Convert to Grayscale ---
+    st.subheader("🔳 Convert to Grayscale")
+    if st.button("Convert to Grayscale", disabled=not uploaded_image):
+        if uploaded_image:
+            # Reread the buffer to avoid "closed file" errors
+            uploaded_image.seek(0)
+            img_bytes = uploaded_image.getvalue()
 
-        st.subheader("🗜️ Compress Image by Percentage")
-        percentage = st.slider("Select compression percentage", 1, 100, 85)
-        if st.button("Compress"):
-            compressed_img = compress_image_by_percentage.compress_image_by_percentage(
-                img, percentage
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_file:
+                tmp_file.write(img_bytes)
+                # This function needs a file path, so we create a temporary one
+                gray_image_data = convert_and_display_grayscale.convert_and_display(tmp_file.name)
+
+            col1, col2 = st.columns(2)
+            with col1:
+                st.image(uploaded_image, caption="Original Image", use_container_width=True)
+            with col2:
+                st.image(gray_image_data, caption="Grayscale Image", use_container_width=True)
+
+    st.divider()
+
+    # --- Compress Image by Percentage ---
+    st.subheader("🗜️ Compress Image")
+    percentage = st.slider("Select compression percentage", 1, 100, 85, disabled=not uploaded_image)
+    if st.button("Compress", disabled=not uploaded_image):
+        if uploaded_image:
+            uploaded_image.seek(0)
+            original_image = Image.open(uploaded_image)
+            compressed_image = compress_image_by_percentage.compress_image_by_percentage(
+                original_image, percentage
             )
-            st.image(
-                compressed_img,
-                caption=f"Compressed Image (Percentage: {percentage}%)",
-                width=300,
-            )
+
+            col1, col2 = st.columns(2)
+            with col1:
+                st.image(original_image, caption="Original Image", use_container_width=True)
+            with col2:
+                st.image(
+                    compressed_image,
+                    caption=f"Compressed by {percentage}%",
+                    use_container_width=True,
+                )
+
+            # Prepare for download
             with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp_file:
-                compressed_img.save(tmp_file.name, format="JPEG")
+                compressed_image.save(tmp_file.name, format="JPEG")
                 with open(tmp_file.name, "rb") as f:
                     st.download_button(
                         "Download Compressed Image", f, file_name="compressed_image.jpg"
                     )
 
-        st.subheader("🎨 Convert Image Format")
-        new_format = st.selectbox("Select new format:", ("JPEG", "PNG", "GIF"))
-        if st.button("Convert Format"):
-            with tempfile.NamedTemporaryFile(
-                    delete=False, suffix=f".{new_format.lower()}"
-            ) as tmp_file:
-                convert_image_format.convert_image_format(
-                    uploaded_image, tmp_file.name, new_format
-                )
-                with open(tmp_file.name, "rb") as f:
-                    st.download_button(
-                        f"Download as {new_format}",
-                        f,
-                        file_name=f"converted.{new_format.lower()}",
-                    )
+    st.divider()
 
-        st.subheader("🖼️ Resize all images in a folder")
-        resize_percentage = st.slider(
-            "Select resize percentage for folder:", 1, 100, 50
-        )
-        folder_images = st.file_uploader(
-            "Upload multiple images to resize",
-            accept_multiple_files=True,
-            type=["png", "jpg", "jpeg"],
-        )
-        if folder_images and st.button("Resize all images"):
+    # --- Convert Image Format ---
+    st.subheader("🎨 Convert Image Format")
+    new_format = st.selectbox("Select new format:", ("JPEG", "PNG", "GIF"), disabled=not uploaded_image)
+    if st.button("Convert Format", disabled=not uploaded_image):
+        if uploaded_image:
+            uploaded_image.seek(0)
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_in:
+                tmp_in.write(uploaded_image.getvalue())
+
+                with tempfile.NamedTemporaryFile(delete=False, suffix=f".{new_format.lower()}") as tmp_out:
+                    convert_image_format.convert_image_format(tmp_in.name, tmp_out.name, new_format)
+                    converted_image = Image.open(tmp_out.name)
+
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.image(uploaded_image, caption="Original Image", use_container_width=True)
+                    with col2:
+                        st.image(converted_image, caption=f"Converted to {new_format}", use_container_width=True)
+
+                    with open(tmp_out.name, "rb") as f:
+                        st.download_button(
+                            f"Download as {new_format}", f, file_name=f"converted.{new_format.lower()}"
+                        )
+
+    st.divider()
+
+    # --- Resize all images in a folder ---
+    st.subheader("🖼️ Resize all images in a folder")
+    folder_images = st.file_uploader(
+        "Upload multiple images to resize",
+        accept_multiple_files=True,
+        type=["png", "jpg", "jpeg"],
+    )
+    resize_percentage = st.slider(
+        "Select resize percentage for folder:", 1, 100, 50, disabled=not folder_images
+    )
+    if st.button("Resize all images", disabled=not folder_images):
+        if folder_images:
             with tempfile.TemporaryDirectory() as tmpdir:
-                for image in folder_images:
-                    with open(os.path.join(tmpdir, image.name), "wb") as f:
-                        f.write(image.getvalue())
-                resize_all_images_in_folder.resize_all_images_in_folder(
-                    tmpdir, resize_percentage
-                )
-                st.success("Images resized successfully.")
+                # Create a zip file in memory to download the resized images
+                zip_buffer = io.BytesIO()
+                with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zipf:
+                    for image_file in folder_images:
+                        # Process each image
+                        img = Image.open(image_file)
+                        new_size = (int(img.width * resize_percentage / 100), int(img.height * resize_percentage / 100))
+                        resized_img = img.resize(new_size, Image.Resampling.LANCZOS)
 
+                        # Save resized image to a buffer
+                        img_byte_arr = io.BytesIO()
+                        resized_img.save(img_byte_arr, format=img.format)
+                        img_byte_arr = img_byte_arr.getvalue()
+
+                        # Add the resized image to the zip file
+                        zipf.writestr(image_file.name, img_byte_arr)
+
+                st.success(f"{len(folder_images)} image(s) resized successfully!")
+                st.download_button(
+                    label="Download Resized Images as ZIP",
+                    data=zip_buffer.getvalue(),
+                    file_name="resized_images.zip",
+                    mime="application/zip",
+                )
 
 # -----------------------------------------------------------------------------
 # JUPYTER NOTEBOOK UTILITIES

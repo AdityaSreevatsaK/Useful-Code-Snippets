@@ -1,14 +1,7 @@
-import os
-
 import requests
-from dotenv import load_dotenv
-
-load_dotenv()
-token = os.getenv('GITHUB_TOKEN')
-headers = {'Authorization': f'token {token}'}
 
 
-def get_all_repos():
+def get_all_repos(github_token):
     """
     Retrieves all GitHub repository names for the authenticated user.
 
@@ -18,6 +11,7 @@ def get_all_repos():
     Uses pagination to fetch up to 100 repositories per page until all are retrieved.
     Prints an error message and stops if the API request fails.
     """
+    headers = {'Authorization': f'token {github_token}'}
     repos = []
     page = 1
     while True:
