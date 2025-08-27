@@ -17,6 +17,6 @@ def convert_word_doc_to_pdf(word_folder_path: str, pdf_folder_path: str = None):
     convert(input_path=word_folder_path, output_path=pdf_folder_path)
 
 
-docx_file_path = "Path to Word document"
-pdf_file_path = "Path to save PDF file"
-convert_word_doc_to_pdf(docx_file_path, pdf_file_path)
+# docx_file_path = "Path to Word document"
+# pdf_file_path = "Path to save PDF file"
+# convert_word_doc_to_pdf(docx_file_path, pdf_file_path)

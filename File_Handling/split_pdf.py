@@ -27,4 +27,4 @@ def split_pdf(input_path, output_folder):
             writer.write(f)
 
 
-split_pdf('Input.pdf', 'output_pages')
+# split_pdf('Input.pdf', 'output_pages')

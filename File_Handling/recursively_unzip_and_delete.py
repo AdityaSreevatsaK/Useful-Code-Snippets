@@ -39,5 +39,5 @@ def unzip_and_delete(folder_path):
                     print("File deleted already.", file_error)
 
 
-folder_to_scan = "Folder path"
-unzip_and_delete(folder_to_scan)
+# folder_to_scan = "Folder path"
+# unzip_and_delete(folder_to_scan)

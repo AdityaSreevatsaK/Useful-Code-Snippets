@@ -26,4 +26,4 @@ def merge_pdfs_in_folder(folder_path, output_path):
     merger.close()
 
 
-merge_pdfs_in_folder('folder_path', 'Merged Document.pdf')
+# merge_pdfs_in_folder('folder_path', 'Merged Document.pdf')

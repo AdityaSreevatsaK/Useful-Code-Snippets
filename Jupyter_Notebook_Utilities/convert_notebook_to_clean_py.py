@@ -84,6 +84,4 @@ def convert_notebook_to_clean_py(ipynb_path, output_py_path=None):
         f.write(cleaned_code)
 
     print(f"Notebook converted and cleaned successfully: {output_py_path}")
-
-
-convert_notebook_to_clean_py("JupyterNotebook.ipynb")
+    return open(output_py_path, 'r', encoding='utf-8')

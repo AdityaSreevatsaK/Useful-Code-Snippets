@@ -1,8 +1,12 @@
+from typing import Any
+
 import cv2
 import matplotlib.pyplot as plt
+from cv2 import Mat
+from numpy import dtype, ndarray
 
 
-def convert_and_display(image_path: str, output_path: str = "Grayscale.png") -> None:
+def convert_and_display(image_path: str, output_path: str = "Grayscale.png") -> Mat | ndarray:
     """
         Description:
             Convert an image to grayscale, save it, and display both the images side by side.
@@ -37,7 +41,8 @@ def convert_and_display(image_path: str, output_path: str = "Grayscale.png") -> 
 
     plt.suptitle("Original Image vs Grayscale Image.")
     plt.show()
+    return gray_image
 
 
 # Example usage
-convert_and_display(image_path="Folder path", output_path='Grayscale.png')
+# convert_and_display(image_path="Folder path", output_path='Grayscale.png')

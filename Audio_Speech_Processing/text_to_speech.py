@@ -21,6 +21,3 @@ def text_to_speech(text: str = "Text to speech function invoked.", is_male: int 
     engine.setProperty(name='rate', value=rate)  # Set speech rate
     engine.say(text=text)
     engine.runAndWait()
-
-
-text_to_speech(text="Hello, this is a text-to-speech conversion in Python!", is_male=0, rate=150)

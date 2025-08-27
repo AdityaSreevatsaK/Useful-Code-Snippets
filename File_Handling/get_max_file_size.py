@@ -29,8 +29,8 @@ def get_max_file_size(folder_path):
     return max_size_value, max_file_value
 
 
-folder_to_scan = "Folder path"
-max_size, max_file = get_max_file_size(folder_to_scan)
+# folder_to_scan = "Folder path"
+# max_size, max_file = get_max_file_size(folder_to_scan)
 
-print(f"The largest file is: {max_file}")
-print(f"Size: {max_size / (1024 * 1024):.2f} MB")
+# print(f"The largest file is: {max_file}")
+# print(f"Size: {max_size / (1024 * 1024):.2f} MB")

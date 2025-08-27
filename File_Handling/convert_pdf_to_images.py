@@ -22,5 +22,5 @@ def convert_pdf_to_images(folder_path: str):
         image.save(f'page_{i + 1}.png', 'PNG')
 
 
-pdf_path = 'Folder path'
-convert_pdf_to_images(pdf_path)
+# pdf_path = 'Folder path'
+# convert_pdf_to_images(pdf_path)

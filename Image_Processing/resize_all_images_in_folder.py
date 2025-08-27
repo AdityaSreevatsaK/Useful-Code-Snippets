@@ -27,4 +27,4 @@ def resize_all_images_in_folder(folder_path, percentage):
             img.save(full_path)
 
 
-resize_all_images_in_folder("folder_path", 50)
+# resize_all_images_in_folder("folder_path", 50)

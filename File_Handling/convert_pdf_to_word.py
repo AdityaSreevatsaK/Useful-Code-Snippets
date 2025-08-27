@@ -20,6 +20,6 @@ def convert_pdf_to_word(pdf_file_path: str, word_file_path: str):
 
 
 # Example usage
-pdf_file = "Path to PDF file"
-word_file = "Path to save Word file"
-convert_pdf_to_word(pdf_file, word_file)
+# pdf_file = "Path to PDF file"
+# word_file = "Path to save Word file"
+# convert_pdf_to_word(pdf_file, word_file)

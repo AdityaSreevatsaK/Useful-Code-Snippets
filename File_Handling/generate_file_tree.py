@@ -24,4 +24,4 @@ def generate_file_tree(path, indent='~'):
 
 folder_path = '.'
 print(f"Folder: {os.path.abspath(folder_path)}")
-generate_file_tree(folder_path)
+# generate_file_tree(folder_path)

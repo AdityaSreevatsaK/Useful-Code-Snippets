@@ -45,7 +45,3 @@ def delete_folder_on_hub(repo_id: str, path_in_repo: str, repo_type: str = "data
             print(f"An HTTP error occurred while deleting folder: {e}")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-
-
-if __name__ == "__main__":
-    delete_folder_on_hub("repo_id", "path_in_repo", "dataset")

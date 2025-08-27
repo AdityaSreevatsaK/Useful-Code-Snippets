@@ -33,5 +33,5 @@ def decompress_files(zip_filename, extract_folder):
         zip_file.extractall(extract_folder)
 
 
-compress_files('archive.zip', 'file1.txt', 'file2.txt')
-decompress_files('archive.zip', './extracted')
+# compress_files('archive.zip', 'file1.txt', 'file2.txt')
+# decompress_files('archive.zip', './extracted')

@@ -22,4 +22,4 @@ def convert_image_format(input_path, output_path, image_format='JPEG'):
     image.save(output_path, format=image_format)
 
 
-convert_image_format("input_path.jpg", "output_path.jpeg", 'JPEG')
+# convert_image_format("input_path.jpg", "output_path.jpeg", 'JPEG')
