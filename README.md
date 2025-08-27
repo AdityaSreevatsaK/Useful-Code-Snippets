@@ -7,7 +7,6 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 ## List of code snippets
 ### Automation & Productivity
 ✦ [Logging Setup](Automation%20&%20Productivity/Logging%20Setup.py)<br />
-✦ [Text to Speech Conversion](Automation%20&%20Productivity/Text%20to%20Speech%20Conversion.py)<br />
 ✦ [Website Online Status](Automation%20&%20Productivity/Webpage%20Online%20Status.py)<br />
 
 ---
@@ -34,6 +33,12 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 
 ---
 
+### Hugging Face Utilities
+
+✦ [Delete Folders From HuggingFace Repo](HuggingFace%20Utilities/Delete%20Folders%20From%20HuggingFace%20Repo.py)<br />
+
+---
+
 ### Image Processing
 ✦ [Convert Image to Grayscale](Image%20Processing/Convert%20Image%20to%20Grayscale.py)<br />
 ✦ [Compress Images](Image%20Processing/Compress%20Images.py)<br />
@@ -44,6 +49,7 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 
 ### Audio & Speech Processing
 ✦ [Voice Pitch Analyzer](Audio%20&%20Speech%20Processing/Voice%20Pitch%20Analyser.py)<br />
+✦ [Text to Speech Conversion](Audio%20&%20Speech%20Processing/Text%20to%20Speech%20Conversion.py)<br />
 
 ---
 
