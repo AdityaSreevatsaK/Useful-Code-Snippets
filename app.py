@@ -35,6 +35,9 @@ from Jupyter_Notebook_Utilities import (
     embed_youtube_video,
 )
 from Regex_Cheatsheet import (
+    convert_text_to_lower_case,
+    convert_text_to_upper_case,
+    convert_text_to_sentence_case,
     extract_dates,
     extract_hashtags,
     extract_urls,
@@ -499,6 +502,18 @@ elif selection == "Regex Cheatsheet":
         "Important dates: 12-05-2023, 03/11/2022. Visit https://example.com. Call 9876543210. #MachineLearning",
     )
 
+    st.subheader("⬆️ Capitalise text")
+    if st.button("Capitalise"):
+        st.write(convert_text_to_upper_case.to_upper_case(text_to_search))
+
+    st.subheader("⬇️ Convert text to lower case")
+    if st.button("Convert to lower case"):
+        st.write(convert_text_to_lower_case.to_lower_case(text_to_search))
+
+    st.subheader("✍🏻 Convert text to sentence case")
+    if st.button("Convert to sentence case"):
+        st.write(convert_text_to_sentence_case.to_sentence_case(text_to_search))
+
     st.subheader("📅 Extract Dates")
     if st.button("Extract Dates"):
         st.write(extract_dates.extract_dates(text_to_search))
@@ -512,7 +527,7 @@ elif selection == "Regex Cheatsheet":
         st.write(extract_urls.extract_urls(text_to_search))
 
     st.subheader("📱 Find Phone Numbers")
-    if st.button("Find Phone Numbers"):
+    if st.button("Find"):
         st.write(find_phone_numbers.find_phone_numbers(text_to_search))
 
     st.subheader("✉️ Validate Email")

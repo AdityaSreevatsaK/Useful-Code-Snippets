@@ -79,6 +79,9 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 
 ### Regex Cheatsheet
 
+✦ [Convert Text to Lower Case](Regex_Cheatsheet/convert_text_to_lower_case.py)<br />
+✦ [Convert Text to Sentence Case](Regex_Cheatsheet/convert_text_to_sentence_case.py)<br />
+✦ [Convert Text to Upper Case](Regex_Cheatsheet/convert_text_to_upper_case.py)<br />
 ✦ [Extract Dates](Regex_Cheatsheet/extract_dates.py)<br />
 ✦ [Extract Hashtags](Regex_Cheatsheet/extract_hashtags.py)<br />
 ✦ [Extract URLs](Regex_Cheatsheet/extract_urls.py)<br />
