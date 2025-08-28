@@ -325,10 +325,11 @@ elif selection == "Hugging Face Utilities":
     hf_token = st.text_input("Hugging Face Token:", type="password")
     if st.button("Delete Folder"):
         if all([repo_id, path_in_repo, hf_token]):
-            delete_folder_on_hub.delete_folder_on_hub(repo_id, path_in_repo, repo_type)
-            st.success(
-                f"Attempted to delete '{path_in_repo}' from '{repo_id}'. Check console for details."
-            )
+            success, message = delete_folder_on_hub.delete_folder_on_hub(repo_id, path_in_repo, repo_type, hf_token)
+            if success:
+                st.success(message)
+            else:
+                st.error(f"Failed to delete '{path_in_repo}' from '{repo_id}'. \n{message}")
         else:
             st.warning("Please fill in all fields.")
 
