@@ -1,2 +1,2 @@
 libportaudio2
-libgl1-mesa-glx
+libgl1
