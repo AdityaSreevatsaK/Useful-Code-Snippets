@@ -1,3 +1,15 @@
+---
+title: Utility-Shelf
+emoji: 📦
+colorFrom: blue
+colorTo: green
+sdk: streamlit
+app_file: src/app.py
+pinned: false
+---
+
+<!-- This metadata block is for Hugging Face Spaces -->
+
 # <p align="center">Useful Code Snippets</p>
 
 Useful-Code-Snippets is a collection of practical and reusable code snippets for various everyday programming tasks.
