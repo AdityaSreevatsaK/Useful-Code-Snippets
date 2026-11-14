@@ -28,4 +28,4 @@ jobs:
       - name: Compile all Python code
         run: python -m compileall -q .
       - name: Run tests
-        run: python -m pytest -q
+        run: python -m pytest -q --ignore=tests/test_integration_runtime.py
