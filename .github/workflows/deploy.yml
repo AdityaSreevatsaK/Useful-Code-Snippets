@@ -34,3 +34,14 @@ jobs:
         env:
           EXPECTED_SHA: ${{ github.sha }}
         run: python scripts/check_hf_space.py --repo AdityaSreevatsaK/Utility-Shelf --expected-sha "$EXPECTED_SHA"
+
+      - name: Show Hugging Face build logs on failure
+        if: failure()
+        env:
+          HF_TOKEN: ${{ secrets.HF_UTILITY_SHELF_TOKEN }}
+        run: |
+          echo "Reading last 120 Space build log lines (credentials are masked)..."
+          curl --fail --silent --show-error --max-time 15 \
+            --header "Authorization: Bearer ${HF_TOKEN}" \
+            "https://huggingface.co/api/spaces/AdityaSreevatsaK/Utility-Shelf/logs/build?tail=120" \
+            | tail -n 120 || true
