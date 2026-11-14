@@ -90,3 +90,14 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 ✦ [Validate Email](Regex_Cheatsheet/validate_email.py)<br />
 
 ---
+
+---
+
+## Running the dashboard
+
+Install the dependencies using `pip install -r requirements.txt`, then run `streamlit run app.py`.
+
+Privileged server operations are disabled on hosted instances. Set `ENABLE_LOCAL_OPERATIONS=1` only for a trusted local instance (PowerShell: `$env:ENABLE_LOCAL_OPERATIONS = "1"`).
+
+Poppler, a supported speech engine and LibreOffice on Linux are needed by some converters.
+See [security, testing and known limitations](docs/SECURITY_AND_TESTING.md).
