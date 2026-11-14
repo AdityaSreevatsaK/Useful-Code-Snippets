@@ -29,3 +29,32 @@ jobs:
       - name: Exercise conversions and Streamlit pages
         run: |
           python -m pytest -q tests/test_integration_runtime.py
+
+  docker-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker runtime
+        run: docker build --tag utility-shelf:ci .
+      - name: Launch Streamlit container and verify readiness
+        run: |
+          docker run --detach --name utility-shelf-ci --publish 8501:8501 utility-shelf:ci
+          ready=0
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://127.0.0.1:8501/_stcore/health; then
+              ready=1
+              break
+            fi
+            if [ -z "$(docker ps --quiet --filter name=utility-shelf-ci)" ]; then
+              echo "Container exited prematurely"
+              docker logs utility-shelf-ci
+              exit 1
+            fi
+            sleep 5
+          done
+          docker logs --tail 70 utility-shelf-ci
+          if [ "$ready" -ne 1 ]; then
+            echo "Streamlit did not become healthy"
+            exit 1
+          fi
