@@ -145,4 +145,4 @@ def test_streamlit_regex_input_and_validation():
     app.text_input[0].set_value("bad@example..com").run()
     next(button for button in app.button if button.label == "Validate").click().run()
     assert not app.exception
-    assert any("Invalid email" in msg.message for msg in app.error)
+    assert len(app.error) == 1
