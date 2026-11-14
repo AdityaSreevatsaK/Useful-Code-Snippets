@@ -1,2 +1,6 @@
 libportaudio2
 libgl1
+libespeak1
+espeak-ng
+poppler-utils
+libreoffice-writer
