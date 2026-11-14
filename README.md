@@ -104,4 +104,4 @@ See [security, testing and known limitations](docs/SECURITY_AND_TESTING.md).
 
 ### Hugging Face deployment
 
-This Space uses the maintained Docker SDK, with Python 3.11 and Streamlit 1.33.0. The Dockerfile installs system dependencies such as Poppler, LibreOffice and eSpeak. The `main` branch is automatically pushed to the Space through GitHub Actions, where the runtime is checked after deployment.
+This Space uses the maintained Docker SDK, with Python 3.11 and Streamlit 1.67.0. The Dockerfile installs system dependencies such as Poppler, LibreOffice and eSpeak. The `main` branch is automatically pushed to the Space through GitHub Actions, where the runtime is checked after deployment.

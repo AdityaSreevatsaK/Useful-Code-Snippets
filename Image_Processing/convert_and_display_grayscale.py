@@ -1,50 +1,18 @@
-from typing import Any
+"""Save and return a greyscale image for use in scripts or Streamlit."""
 
 import cv2
-import matplotlib.pyplot as plt
-from cv2 import Mat
-from numpy import dtype, ndarray
+import numpy as np
 
 
-def convert_and_display(image_path: str, output_path: str = "Grayscale.png") -> Mat | ndarray:
+def convert_and_display(image_path: str, output_path: str = "Grayscale.png") -> np.ndarray:
+    """Convert to greyscale without starting a Matplotlib window.
+
+    The Streamlit dashboard displays the returned image directly.
     """
-        Description:
-            Convert an image to grayscale, save it, and display both the images side by side.
-
-        Args:
-            image_path (str): The path to the input image.
-            output_path (str, optional): The path to save the grayscale image. Defaults to "Grayscale.png".
-
-        Returns:
-            None
-    """
-    # Read the image
     image = cv2.imread(image_path)
     if image is None:
         raise ValueError("Unable to decode image")
-    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    cv2.imwrite(output_path, gray_image)
-
-    # Convert BGR to RGB for correct color display in Matplotlib
-    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-    # Display images side by side
-    plt.figure(figsize=(10, 5))
-
-    plt.subplot(1, 2, 1)
-    plt.imshow(image_rgb)
-    plt.title("Original Image")
-    plt.axis("off")
-
-    plt.subplot(1, 2, 2)
-    plt.imshow(gray_image, cmap="gray")
-    plt.title("Grayscale Image")
-    plt.axis("off")
-
-    plt.suptitle("Original Image vs Grayscale Image.")
-    plt.close()
-    return gray_image
-
-
-# Example usage
-# convert_and_display(image_path="Folder path", output_path='Grayscale.png')
+    grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    if not cv2.imwrite(output_path, grayscale):
+        raise OSError(f"Failed to write greyscale image: {output_path}")
+    return grayscale

@@ -1,36 +1,28 @@
+"""Find the largest regular file inside a directory tree."""
+
 import os
+from pathlib import Path
 
 
-def get_max_file_size(folder_path):
-    """
-        Description:
-            The get_max_file_size function scans a given folder (including its subdirectories) and identifies the
-            largest file based on size. It returns the file path and its size in bytes.
-
-        Args:
-            folder_path (str): The path to the folder to be scanned.
-
-        Returns:
-            tuple: A tuple containing the size of the largest file in bytes and its file path.
-    """
-
-    folder_path = folder_path.replace("\\", "/")
-    max_size_value = 0
-    max_file_value = None
-
-    for root, dirs, files in os.walk(folder_path):
-        for file in files:
-            file_path = os.path.join(root, file)
-            file_size = os.path.getsize(file_path)
-            if file_size > max_size_value:
-                max_size_value = file_size
-                max_file_value = file_path
-
-    return max_size_value, max_file_value
-
-
-# folder_to_scan = "Folder path"
-# max_size, max_file = get_max_file_size(folder_to_scan)
-
-# print(f"The largest file is: {max_file}")
-# print(f"Size: {max_size / (1024 * 1024):.2f} MB")
+def get_max_file_size(folder_path: str) -> tuple[int, str | None]:
+    """Return (byte_size, path); on an empty tree return (0, None)."""
+    base = Path(folder_path)
+    if not base.is_dir():
+        raise NotADirectoryError(folder_path)
+    max_size = 0
+    max_file: str | None = None
+    for root, dirs, files in os.walk(base, followlinks=False):
+        dirs.sort()
+        for name in sorted(files):
+            path = Path(root) / name
+            try:
+                if not path.is_file() or path.is_symlink():
+                    continue
+                file_size = path.stat().st_size
+            except OSError:
+                # Files can be deleted while a directory scan is running.
+                continue
+            if max_file is None or file_size > max_size:
+                max_size = file_size
+                max_file = str(path)
+    return max_size, max_file

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import nbformat
 import pytest
-from PyPDF2 import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 
 from File_Handling.generate_file_tree import generate_file_tree
 from File_Handling.merge_pdfs_in_folder import merge_pdfs_in_folder
@@ -60,3 +60,10 @@ def test_notebook_conversion_returns_path(tmp_path):
     path = convert_notebook_to_clean_py(str(source))
     assert isinstance(path, str)
     assert "print('hello')" in Path(path).read_text()
+
+
+def test_notebook_removes_ipython_magics():
+    from Jupyter_Notebook_Utilities.convert_notebook_to_clean_py import clean_python_code
+
+    code = "get_ipython().run_line_magic('matplotlib', 'inline')\nprint('ok')\n"
+    assert clean_python_code(code) == "print('ok')"

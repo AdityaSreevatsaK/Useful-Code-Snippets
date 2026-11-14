@@ -1,0 +1,57 @@
+name: Security and dependency audit
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - name: Scan current checkout for accidentally committed credentials
+        run: |
+          docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            --volume "$GITHUB_WORKSPACE:/repo:ro" \
+            ghcr.io/gitleaks/gitleaks:v8.30.1 \
+            dir --redact /repo
+
+  dependency-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: Install auditor
+        run: python -m pip install --upgrade pip pip-audit
+      - name: Generate Python security audit
+        run: pip-audit -r requirements.txt --progress-spinner off --format json --output dependency-audit.json
+      - name: Summarise findings without dumping dependency metadata into logs
+        run: |
+          if [ -f dependency-audit.json ]; then
+            python scripts/summarise_dependency_audit.py dependency-audit.json
+          else
+            echo "WARNING: dependency audit did not generate a report"
+          fi
+      - name: Upload audit results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dependency-audit
+          path: dependency-audit.json
+          if-no-files-found: ignore
+          retention-days: 7
