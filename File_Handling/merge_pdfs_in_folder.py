@@ -1,29 +1,24 @@
-import os
+"""Merge PDFs from a folder in filename order."""
+
+from pathlib import Path
 
 from PyPDF2 import PdfMerger
 
 
-def merge_pdfs_in_folder(folder_path, output_path):
-    """
-    Description:
-        Merge multiple PDF files in a folder into a single PDF.
-        This function iterates through all the files in the specified folder,
-        identifies files with a `.pdf` extension, and merges them in sorted order
-        into a single output PDF file.
-
-    Args:
-        folder_path (str): The path to the folder containing the PDF files to merge.
-        output_path (str): The path where the merged PDF file will be saved.
-
-    Returns:
-        None
-    """
+def merge_pdfs_in_folder(folder_path: str, output_path: str) -> None:
+    """Do not accidentally merge an existing output document into itself."""
+    destination = Path(output_path).resolve()
+    files = sorted(
+        (p for p in Path(folder_path).iterdir()
+         if p.is_file() and p.suffix.lower() == ".pdf" and p.resolve() != destination),
+        key=lambda p: p.name,
+    )
+    if not files:
+        raise ValueError("No PDF files were supplied")
     merger = PdfMerger()
-    for file in sorted(os.listdir(folder_path)):
-        if file.endswith(".pdf"):
-            merger.append(os.path.join(folder_path, file))
-    merger.write(output_path)
-    merger.close()
-
-
-# merge_pdfs_in_folder('folder_path', 'Merged Document.pdf')
+    try:
+        for pdf in files:
+            merger.append(str(pdf))
+        merger.write(str(destination))
+    finally:
+        merger.close()

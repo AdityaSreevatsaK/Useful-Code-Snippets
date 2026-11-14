@@ -1,33 +1,35 @@
-import zipfile
+"""Create and safely extract ZIP archives."""
+
+from pathlib import Path
+from zipfile import ZipFile, ZIP_DEFLATED
+import shutil
+
+from File_Handling.archive_safety import safe_destination, validate_archive
 
 
-# Compress files
-def compress_files(zip_filename, *file_names):
-    """
-    Compress multiple files into a ZIP archive.
-
-    This function creates a ZIP file and adds the specified files to it.
-
-    Parameters:
-    zip_filename (str): The name of the ZIP file to create.
-    *file_names (str): The names of the files to compress.
-    """
-    with zipfile.ZipFile(zip_filename, 'w') as zip_file:
-        for file in file_names:
-            zip_file.write(file)
+def compress_files(zip_filename: str, *file_names: str) -> None:
+    with ZipFile(zip_filename, "w", ZIP_DEFLATED) as archive:
+        for filename in file_names:
+            archive.write(filename, arcname=Path(filename).name)
 
 
-# Decompress files
-def decompress_files(zip_filename, extract_folder):
-    """
-    Decompress a ZIP archive into a specified folder.
-
-    This function extracts all files from the given ZIP file into the
-    specified folder.
-
-    Parameters:
-    zip_filename (str): The name of the ZIP file to decompress.
-    extract_folder (str): The folder where the files will be extracted.
-    """
-    with zipfile.ZipFile(zip_filename, 'r') as zip_file:
-        zip_file.extractall(extract_folder)
+def decompress_files(zip_filename: str, extract_folder: str) -> list[str]:
+    """Reject unsafe paths, symlinks and decompression bombs."""
+    root = Path(extract_folder)
+    root.mkdir(parents=True, exist_ok=True)
+    extracted = []
+    with ZipFile(zip_filename, "r") as archive:
+        paths = [(info, safe_destination(root, name))
+                 for info, name in validate_archive(archive)]
+        for info, destination in paths:
+            if destination.exists() and not info.is_dir():
+                raise ValueError("Archive would overwrite an existing file")
+        for info, destination in paths:
+            if info.is_dir():
+                destination.mkdir(parents=True, exist_ok=True)
+            else:
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                with archive.open(info) as source, destination.open("xb") as output:
+                    shutil.copyfileobj(source, output)
+                extracted.append(str(destination))
+    return extracted

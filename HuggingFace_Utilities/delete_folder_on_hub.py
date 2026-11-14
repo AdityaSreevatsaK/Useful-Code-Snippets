@@ -1,43 +1,31 @@
-from huggingface_hub import HfApi, login
+"""Delete a single folder with request-scoped Hugging Face authentication."""
+
+from pathlib import PurePosixPath
+
+from huggingface_hub import HfApi
 from huggingface_hub.utils import HfHubHTTPError
 
 
-def delete_folder_on_hub(repo_id: str, path_in_repo: str, repo_type: str = "dataset", hf_token: str = None):
-    """
-    Deletes a folder from a specified Hugging Face Hub repository.
-
-    Args:
-        repo_id (str): The ID of the repository on the Hub.
-        path_in_repo (str): The folder path to delete within the repository.
-        repo_type (str, optional): The type of repository. Defaults to "dataset".
-        hf_token (str, optional): The huggingface token to sign in and delete required folder.
-    """
-    print(f"Attempting to delete folder '{path_in_repo}' in repo '{repo_id}'...")
-
+def delete_folder_on_hub(repo_id: str, path_in_repo: str,
+                         repo_type: str = "dataset", hf_token: str | None = None):
     try:
-        login(token=hf_token)
-        api = HfApi()
-
-        # Execute the delete operation
-        api.delete_folder(
-            repo_id=repo_id,
-            path_in_repo=path_in_repo,
-            repo_type=repo_type,
-            commit_message=f"feat: delete content in {path_in_repo}"
+        path = path_in_repo.strip().strip("/")
+        parts = PurePosixPath(path).parts
+        if (not path or path in (".", "..") or not parts
+                or any(part in ("", ".", "..") for part in parts)
+                or "\\" in path):
+            return False, "A valid, non-root folder path is required"
+        if repo_type not in ("dataset", "model", "space"):
+            return False, "Invalid repository type"
+        if not repo_id.strip() or not hf_token:
+            return False, "Repository ID and token are required"
+        # Never call login(): it persists credentials in a shared process.
+        HfApi(token=hf_token).delete_folder(
+            repo_id=repo_id, path_in_repo=path,
+            repo_type=repo_type, commit_message=f"Delete folder {path}",
         )
-        print(f"Successfully deleted folder '{path_in_repo}'.")
-        return True, f"Successfully deleted folder '{path_in_repo}'."
-
-    except HfHubHTTPError as e:
-        failed_message = ""
-        # Specifically handle cases where the folder or repo is not found
-        if e.response.status_code == 404:
-            print(f"Could not delete. Folder '{path_in_repo}' or repo '{repo_id}' not found.")
-            failed_message = f"Could not delete. Folder '{path_in_repo}' or repo '{repo_id}' not found."
-        else:
-            print(f"An HTTP error occurred while deleting folder: {e}")
-            failed_message = f"An HTTP error occurred while deleting folder: {e}"
-        return False, failed_message
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return False, f"An unexpected error occurred: {e}"
+        return True, f"Deleted folder '{path}' from '{repo_id}'"
+    except HfHubHTTPError as exc:
+        return False, f"Hugging Face request failed (HTTP {exc.response.status_code})"
+    except Exception as exc:
+        return False, f"Deletion failed ({type(exc).__name__})"

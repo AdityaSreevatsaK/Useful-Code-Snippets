@@ -1,0 +1,33 @@
+name: Full runtime integration smoke
+
+on:
+  push:
+    branches:
+      - audit/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install system converters
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            poppler-utils libreoffice-writer espeak-ng libespeak1 libportaudio2 libgl1 ffmpeg
+      - name: Install complete application dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pytest
+          python -m pip check
+      - name: Exercise conversions and Streamlit pages
+        run: |
+          python -m pytest -q tests/test_integration_runtime.py

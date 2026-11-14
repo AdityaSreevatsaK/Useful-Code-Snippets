@@ -1,22 +1,31 @@
-from docx2pdf import convert
+"""Convert DOCX to PDF on Windows/macOS or Linux with LibreOffice."""
+
+from pathlib import Path
+import shutil
+import subprocess
+import sys
 
 
-def convert_word_doc_to_pdf(word_folder_path: str, pdf_folder_path: str = None):
-    """
-        Description:
-            This function is used to convert the Word document to PDF.
+def convert_word_doc_to_pdf(word_folder_path: str, pdf_folder_path: str | None = None) -> None:
+    source = Path(word_folder_path)
+    destination = Path(pdf_folder_path) if pdf_folder_path else source.with_suffix(".pdf")
+    destination.parent.mkdir(parents=True, exist_ok=True)
 
-        Args:
-            word_folder_path (str): The path to the folder containing the Word document(s) to be converted.
-            pdf_folder_path (str, optional): The path to the folder where the converted PDF(s) will be saved.
-                                             Defaults to None.
+    if sys.platform in ("win32", "darwin"):
+        from docx2pdf import convert
+        convert(str(source), str(destination))
+        return
 
-        Returns:
-            None
-    """
-    convert(input_path=word_folder_path, output_path=pdf_folder_path)
-
-
-# docx_file_path = "Path to Word document"
-# pdf_file_path = "Path to save PDF file"
-# convert_word_doc_to_pdf(docx_file_path, pdf_file_path)
+    binary = shutil.which("libreoffice") or shutil.which("soffice")
+    if not binary:
+        raise RuntimeError("DOCX to PDF on Linux requires LibreOffice")
+    result = subprocess.run(
+        [binary, "--headless", "--convert-to", "pdf", "--outdir",
+         str(destination.parent), str(source)],
+        capture_output=True, text=True, check=False, timeout=120,
+    )
+    generated = destination.parent / (source.stem + ".pdf")
+    if result.returncode != 0 or not generated.exists():
+        raise RuntimeError("LibreOffice conversion failed: " + result.stderr[-500:])
+    if generated.resolve() != destination.resolve():
+        generated.replace(destination)
