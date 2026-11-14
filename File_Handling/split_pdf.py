@@ -1,7 +1,7 @@
 """Split a PDF into one file per page."""
 
 from pathlib import Path
-from PyPDF2 import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 
 
 def split_pdf(input_path: str, output_folder: str) -> list[str]:

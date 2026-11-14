@@ -2,7 +2,7 @@ from pathlib import Path
 
 import nbformat
 import pytest
-from PyPDF2 import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 
 from File_Handling.generate_file_tree import generate_file_tree
 from File_Handling.merge_pdfs_in_folder import merge_pdfs_in_folder
