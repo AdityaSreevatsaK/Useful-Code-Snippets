@@ -496,7 +496,7 @@ def render_resize_images():
     )
     if st.button("Resize all images", disabled=not folder_images):
         if folder_images:
-            with tempfile.TemporaryDirectory() as tmpdir:
+            with tempfile.TemporaryDirectory():
                 # Create a zip file in memory to download the resized images
                 zip_buffer = io.BytesIO()
                 with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zipf:
