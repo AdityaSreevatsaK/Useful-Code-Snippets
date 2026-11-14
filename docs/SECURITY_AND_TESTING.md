@@ -70,3 +70,17 @@ publicly hosted application. Integration checks remain necessary before merge.
 ## Hugging Face runtime
 
 Hugging Face's legacy built-in Streamlit SDK now injects a conflicting Streamlit version. This Space is deployed as a Docker Space, pinning Python 3.11 and installing `requirements.txt` without Hugging Face overriding Streamlit. The image runs Streamlit as UID 1000 on port 8501. CI builds the image and checks `/_stcore/health` before merging changes.
+
+
+## Continuous security checks
+
+The Phase 3 workflows run Gitleaks against the **current checkout** and
+`pip-audit` against the fully resolved production requirements. They block
+merging if a new secret or a known dependency advisory is detected. Neither
+replaces a complete security review or removes the previously exposed key
+from historical commits.
+
+GitHub Actions use pull-request concurrency cancellation and Python
+dependency caches to avoid spending runner capacity on superseded revisions.
+The deployment push is fast-forward-only: an unexpected independent Space
+revision fails rather than being silently overwritten.

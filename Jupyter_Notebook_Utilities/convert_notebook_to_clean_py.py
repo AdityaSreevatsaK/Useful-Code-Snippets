@@ -10,6 +10,7 @@ from nbconvert import PythonExporter
 def clean_python_code(code: str) -> str:
     code = re.sub(r"^#\s*In\[\d*]:.*$", "", code, flags=re.MULTILINE)
     code = re.sub(r"^\s*[%!].*$", "", code, flags=re.MULTILINE)
+    code = re.sub(r"^\s*get_ipython\(\)\.(?:run_line_magic|system)\(.*\)\s*$", "", code, flags=re.MULTILINE)
     code = re.sub(r"^(?!#)(.*\bpip\s+install\b.*)$", r"# \1", code, flags=re.MULTILINE)
     code = re.sub(r"[ \t]+$", "", code, flags=re.MULTILINE)
     return re.sub(r"\n{3,}", "\n\n", code).strip()

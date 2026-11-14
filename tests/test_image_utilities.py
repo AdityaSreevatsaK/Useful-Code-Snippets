@@ -26,3 +26,14 @@ def test_jpeg_replaces_alpha_with_white(tmp_path):
     convert_image_format(str(source), str(target), "JPEG")
     with Image.open(target) as output:
         assert output.mode == "RGB"
+
+
+def test_reexport_animated_gif_preserves_frames(tmp_path):
+    source = tmp_path / "moving.gif"
+    output = tmp_path / "copy.gif"
+    first = Image.new("RGB", (6, 6), "red")
+    second = Image.new("RGB", (6, 6), "blue")
+    first.save(source, format="GIF", save_all=True, append_images=[second], duration=100, loop=0)
+    convert_image_format(str(source), str(output), "GIF")
+    with Image.open(output) as result:
+        assert result.n_frames == 2

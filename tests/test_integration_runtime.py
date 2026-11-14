@@ -39,6 +39,11 @@ def test_libreoffice_docx_conversion(tmp_path):
     convert_word_doc_to_pdf(str(source), str(destination))
     assert destination.is_file()
     assert len(PdfReader(str(destination)).pages) >= 1
+    from File_Handling.convert_pdf_to_word import convert_pdf_to_word
+    restored = tmp_path / "roundtrip.docx"
+    convert_pdf_to_word(str(destination), str(restored))
+    assert restored.is_file()
+    assert restored.stat().st_size > 100
 
 
 def test_speech_file_output(tmp_path):
@@ -128,3 +133,16 @@ def test_bulk_resize_never_creates_zero_dimensions(tmp_path):
     assert str(path) in result
     with Image.open(path) as image:
         assert image.size == (1, 1)
+
+
+def test_streamlit_regex_input_and_validation():
+    from streamlit.testing.v1 import AppTest
+
+    app = AppTest.from_file(Path(__file__).resolve().parents[1] / "app.py", default_timeout=45).run()
+    app.sidebar.radio[0].set_value("Regex Cheatsheet").run()
+    assert not app.exception
+
+    app.text_input[0].set_value("bad@example..com").run()
+    next(button for button in app.button if button.label == "Validate").click().run()
+    assert not app.exception
+    assert any("Invalid email" in msg.message for msg in app.error)
