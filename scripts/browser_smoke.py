@@ -38,6 +38,11 @@ def smoke():
         page.goto(BASE + "/", wait_until="networkidle")
         page.get_by_role("heading", name="Good tools. Better workflows.").wait_for()
         assert "34" in page.locator(".stat-value").first.inner_text()
+        brand = page.locator(".brand-name").bounding_box()
+        sub = page.locator(".brand-sub").bounding_box()
+        assert brand and sub
+        assert sub["y"] >= brand["y"] + brand["height"] - 2
+        assert abs(sub["x"] - brand["x"]) < 2
         page.screenshot(path=str(OUTPUT / "desktop-light.png"), full_page=True)
 
         page.keyboard.press("Control+k")

@@ -123,7 +123,7 @@ function sidebar() {
   return '<aside class="sidebar" aria-label="Main navigation">' +
     '<a href="/" class="brand" data-action="home">' +
     '<span class="brand-symbol">' + svg("grid",21) + '</span>' +
-    '<span><span class="brand-name">Utility Shelf</span><span class="brand-sub" style="display:block">DEVELOPER TOOLKIT</span></span></a>' +
+    '<span class="brand-copy"><span class="brand-name">Utility Shelf</span><span class="brand-sub">DEVELOPER TOOLKIT</span></span></a>' +
     '<div class="nav-group"><div class="nav-label">WORKSPACE</div>' +
     '<button class="nav-item ' + (!S.current && S.filter === "All tools" ? "active":"") +
     '" data-action="home"><span class="icon">' + svg("grid",18) + '</span>Overview</button>' +
