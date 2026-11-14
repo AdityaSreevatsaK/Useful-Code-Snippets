@@ -4,12 +4,20 @@ on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: utility-shelf-deployment
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -21,3 +29,8 @@ jobs:
           git push hf main --force
         env:
           HF_TOKEN: ${{ secrets.HF_UTILITY_SHELF_TOKEN }}
+
+      - name: Check Hugging Face build and runtime
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+        run: python scripts/check_hf_space.py --repo AdityaSreevatsaK/Utility-Shelf --expected-sha "$EXPECTED_SHA"

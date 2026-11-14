@@ -1,9 +1,7 @@
 name: Full runtime integration smoke
 
 on:
-  push:
-    branches:
-      - audit/**
+  pull_request:
   workflow_dispatch:
 
 permissions:
