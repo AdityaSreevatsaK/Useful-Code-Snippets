@@ -77,8 +77,20 @@ def remember_download(label: str, data, file_name: str, mime: str | None = None,
     if not isinstance(data, bytes):
         raise TypeError("Downloads must be byte strings")
     slug = st.session_state["shelf_active_tool"]
-    results = st.session_state.setdefault("shelf_outputs", {}).setdefault(slug, {})
-    results[str(key or file_name or label)] = {
+    all_outputs = st.session_state.setdefault("shelf_outputs", {})
+    results = all_outputs.setdefault(slug, {})
+    slot = str(key or file_name or label)
+    previous = results.get(slot)
+    used = sum(len(item["data"]) for saved in all_outputs.values() for item in saved.values())
+    remaining = 64 * 1024 * 1024 - used + (len(previous["data"]) if previous else 0)
+    if len(data) > remaining:
+        st.warning("This output exceeds the session storage budget. Download it now; it will not remain after reruns.")
+        st.download_button(
+            label, data, file_name=file_name, mime=mime,
+            key=f"temporary_output_{slug}_{len(results)}",
+        )
+        return
+    results[slot] = {
         "label": label, "data": data,
         "file_name": file_name, "mime": mime,
     }

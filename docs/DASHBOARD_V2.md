@@ -27,6 +27,8 @@ first and an optional hosted user interface second.
    elsewhere and returning. Use Clear result to remove those outputs.
 6. Star a tool to find it under Favourites in the overview.
 
+Generated results are kept in server-side Streamlit session state, subject to a 64 MiB per-session budget. Oversized results are offered for immediate download but are not retained.
+
 Generated results are stored in the server-side Streamlit session. They are
 **not** persisted to a database, across browsers, or after a server restart.
 Favourites and recently used tools are also session-scoped. Results from

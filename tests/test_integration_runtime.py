@@ -170,7 +170,7 @@ def test_dashboard_home_search_and_tool_navigation():
     assert app.sidebar.radio[0].value == "Overview"
     app.text_input[0].set_value("PDF DOCX").run()
     assert not app.exception
-    assert len([button for button in app.button if button.label == "Open tool"]) == 1
+    assert len([button for button in app.button if button.label == "Open tool"]) == 2
 
     app.text_input[0].set_value("nonexistentcategorytool").run()
     assert not app.exception
@@ -185,3 +185,36 @@ def test_workspace_selection_and_code_tab_render():
     app.selectbox[0].set_value("extract-dates").run()
     assert not app.exception
     assert "extract-dates" == app.session_state["shelf_active_tool"]
+
+
+
+def test_open_tool_from_search_and_favourites():
+    from streamlit.testing.v1 import AppTest
+
+    app = AppTest.from_file(Path(__file__).resolve().parents[1] / "app.py", default_timeout=45).run()
+    app.text_input[0].set_value("normalise spaces").run()
+    open_button = next(button for button in app.button if button.key == "open_all_remove-spaces")
+    open_button.click().run()
+    assert not app.exception
+    assert app.sidebar.radio[0].value == "Regex Cheatsheet"
+    assert app.session_state["shelf_active_tool"] == "remove-spaces"
+
+    favourite = next(button for button in app.button if button.label == "☆ Favourite")
+    favourite.click().run()
+    assert "remove-spaces" in app.session_state["shelf_favourites"]
+
+
+def test_text_result_persists_after_tool_switch():
+    from streamlit.testing.v1 import AppTest
+
+    app = AppTest.from_file(Path(__file__).resolve().parents[1] / "app.py", default_timeout=45).run()
+    app.sidebar.radio[0].set_value("Regex Cheatsheet").run()
+    app.selectbox[0].set_value("upper-case").run()
+    next(button for button in app.button if button.label == "Capitalise").click().run()
+    assert not app.exception
+    saved = app.session_state["shelf_values"]["upper-case"]
+    assert "IMPORTANT DATES" in saved
+    app.selectbox[0].set_value("lower-case").run()
+    app.selectbox[0].set_value("upper-case").run()
+    assert not app.exception
+    assert app.session_state["shelf_values"]["upper-case"] == saved
