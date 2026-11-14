@@ -8,7 +8,10 @@ def test_runtime_health_success(monkeypatch):
         "sha": "abc", "subdomain": "test-space",
         "runtime": {"stage": "RUNNING"},
     })
-    monkeypatch.setattr("scripts.check_hf_space.http_healthy", lambda _: True)
+    def assert_health(url):
+        assert url.endswith("/api/health")
+        return True
+    monkeypatch.setattr("scripts.check_hf_space.http_healthy", assert_health)
     assert check_space("user/space", "abc", attempts=1, interval=0)
 
 
