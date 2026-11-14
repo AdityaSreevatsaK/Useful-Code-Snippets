@@ -8,6 +8,10 @@ from pathlib import Path
 
 from PIL import Image
 import pytest
+import cv2
+
+from Image_Processing.convert_and_display_grayscale import convert_and_display
+from Image_Processing.resize_all_images_in_folder import resize_all_images_in_folder
 from pypdf import PdfReader, PdfWriter
 
 
@@ -104,13 +108,6 @@ def test_privileged_controls_are_disabled_on_public_dashboard(monkeypatch):
             assert len(buttons) == 1, (section, label)
             assert buttons[0].disabled, (section, label)
 
-
-"""Linux image processing integration tests."""
-
-import cv2
-
-from Image_Processing.convert_and_display_grayscale import convert_and_display
-from Image_Processing.resize_all_images_in_folder import resize_all_images_in_folder
 
 
 def test_greyscale_conversion_returns_pixels_without_gui(tmp_path):
