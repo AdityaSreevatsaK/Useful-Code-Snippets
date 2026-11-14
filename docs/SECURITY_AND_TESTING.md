@@ -1,86 +1,66 @@
-# Security, limitations and testing
+# Security, processing limits and verification
 
-## Hosted versus local operations
+## Public web safety
 
-The public Streamlit dashboard deliberately disables:
-- filesystem and Git-status inspection on the server;
-- URL status probing;
-- forms for personal GitHub/Hugging Face tokens;
-- Hugging Face folder deletion.
+Utility Shelf v3 uses a **FastAPI** backend served by Uvicorn on port 7860.
+The frontend is in web/. Privileged operations are not available over HTTP:
+Git status, local filesystem inspection, arbitrary URL checks, tokens,
+Hugging Face deletion and local logging are viewable as source reference
+material only. FastAPI returns 403 regardless of ENABLE_LOCAL_OPERATIONS.
 
-To enable these utilities on a **trusted local machine only**:
+The old Streamlit dashboard has been retained for rollback only. If used
+on a trusted local machine, never expose ENABLE_LOCAL_OPERATIONS=1 on a
+public interface. The current public Space does not execute those handlers.
 
-On Linux/macOS:
-    ENABLE_LOCAL_OPERATIONS=1 streamlit run app.py
+## Upload and execution limits
 
-On Windows PowerShell:
-    $env:ENABLE_LOCAL_OPERATIONS = "1"
-    streamlit run app.py
+- Up to 20 MiB per uploaded file and 40 MiB per request.
+- Up to 30 files per request, and 50 PDF pages per processing operation.
+- Images above 25 million pixels are refused.
+- ZIP validation rejects absolute and traversal paths, symlinks,
+  duplicates, encrypted members and suspicious compression ratios.
+- ZIP extraction is capped at five nested rounds and 100 MiB.
+- Processing happens in separate temporary directories, which are
+  cleaned up after the response data has been assembled.
+- At most two concurrent processing operations run in each process.
+  Excess jobs fail quickly with HTTP 429 instead of an unbounded queue.
 
-Never configure this setting on a publicly accessible Space or server.
+These are safeguards, not a promise of hardened multi-tenant isolation.
+Large-scale public hosting still requires external rate limiting,
+request-body enforcement at the reverse proxy, workload quotas, security
+patching and stronger isolation for document converters.
 
-## File uploads
+## Web security and privacy
 
-- Files above 20 MiB are rejected; the Streamlit server also sets this limit.
-- ZIP extraction rejects absolute/traversal paths, symlinks, overwrites,
-  excessive decompressed sizes and suspicious compression ratios.
-- ZIP extraction is limited to five nested archive rounds and 100 MiB.
-- Conversions use temporary directories and remove temporary source files.
-- Running arbitrary document converters on public uploads still warrants
-  container resource limits, timeouts and rate limiting.
+The API rejects cross-origin POST requests when an Origin is present.
+Responses set no-sniff, CSP, permissions and referrer policies.
+The Content Security Policy explicitly allows framing by huggingface.co,
+as needed for Space embedding. Do not introduce X-Frame-Options:
+SAMEORIGIN, which would break embedded Space display.
 
-## Exposed encryption key
+No account or database is required. User content is processed temporarily.
+Favourites and recent tool names are stored in localStorage; files and
+generated data are not intentionally persisted there. Never record
+uploaded file contents, credentials or personal information in logs.
 
-A Fernet-style file named `secret.key` was previously committed to this
-public repository. This branch deletes it and adds it to `.gitignore`, but
-it remains in Git history and on the production branch until merged.
-Treat it as compromised if it was ever used with sensitive material.
-Rotate the key and re-encrypt any data that must remain confidential.
-Any optional history rewrite requires deliberate coordination with clones.
+## Historical encryption key
 
-## Operating system dependencies
+A Fernet-style secret.key existed in this repository's historical commits.
+It has been removed from the current tree, but not history. Treat it as
+compromised if it was used. Rotate the key and re-encrypt affected data.
+Any history rewrite requires a separate coordinated recovery plan.
 
-PDF-to-image conversion requires Poppler.
-Linux DOCX-to-PDF requires LibreOffice.
-Text-to-speech requires a supported speech engine and installed voices.
-The available voice genders and audio output formats vary by platform.
+## Testing
 
-## Verification
+Python 3.11/3.12 checks cover importability, AST parsing, linting,
+unit tests and API contract tests. Linux integration exercises PDF,
+DOCX, ZIP, image and audio utilities. Docker smoke checks port 7860,
+GET /api/health, catalogue and frontend assets. Chromium smoke tests
+exercise search, routes, text execution, mobile navigation and a dark
+textarea contrast threshold of 7:1; desktop and mobile screenshots
+are uploaded as CI artefacts.
 
-The quality workflow runs on Python 3.11 and Python 3.12.
-It checks code compilation and regression tests for archives, PDFs,
-notebook conversion, images and local-only UI contract checks.
-
-Run locally:
-    python -m pip install pytest Pillow PyPDF2 pdf2image nbformat nbconvert
-    python -m pytest -q
-
-The offline tests do not exercise every OS-specific conversion or the
-publicly hosted application. Integration checks remain necessary before merge.
-
-## Outstanding work
-
-- Update and audit pinned third-party dependency versions.
-- Verify the Hugging Face Space builds with Poppler, LibreOffice and speech
-  engine packages before merging.
-- Consider a separate local-only CLI for privileged utilities.
-- The DNS validation in website status checks is not a sufficient defence
-  for a general-purpose public URL fetcher. Keep it local-only.
-
-## Hugging Face runtime
-
-Hugging Face's legacy built-in Streamlit SDK now injects a conflicting Streamlit version. This Space is deployed as a Docker Space, pinning Python 3.11 and installing `requirements.txt` without Hugging Face overriding Streamlit. The image runs Streamlit as UID 1000 on port 8501. CI builds the image and checks `/_stcore/health` before merging changes.
-
-
-## Continuous security checks
-
-The Phase 3 workflows run Gitleaks against the **current checkout** and
-`pip-audit` against the fully resolved production requirements. They block
-merging if a new secret or a known dependency advisory is detected. Neither
-replaces a complete security review or removes the previously exposed key
-from historical commits.
-
-GitHub Actions use pull-request concurrency cancellation and Python
-dependency caches to avoid spending runner capacity on superseded revisions.
-The deployment push is fast-forward-only: an unexpected independent Space
-revision fails rather than being silently overwritten.
+Gitleaks scans the current checkout and pip-audit validates dependencies.
+The deploy workflow uses the exact expected Git revision and /api/health.
+Historical keys, OS-level vulnerabilities and sophisticated abuse are
+not ruled out by these checks.

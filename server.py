@@ -7,6 +7,7 @@ over HTTP, even if ENABLE_LOCAL_OPERATIONS has been configured.
 
 from __future__ import annotations
 
+import asyncio
 import io
 import json
 import logging
@@ -34,6 +35,8 @@ MAX_PIXELS = 25_000_000
 MAX_PDF_PAGES = 50
 Image.MAX_IMAGE_PIXELS = MAX_PIXELS
 logger = logging.getLogger("utility_shelf")
+MAX_CONCURRENT_OPERATIONS = 2
+PROCESS_SLOTS = asyncio.Semaphore(MAX_CONCURRENT_OPERATIONS)
 
 app = FastAPI(
     title="Utility Shelf API",
@@ -365,7 +368,15 @@ async def run_tool(
                 raise HTTPException(413, "Uploaded files exceed the 40 MiB limit")
             filename = Path((item.filename or "upload").replace("\\", "/")).name
             uploaded.append((filename, data))
-        result = await run_in_threadpool(_execute, slug, uploaded, text, _options(options))
+        validated_options = _options(options)
+        try:
+            await asyncio.wait_for(PROCESS_SLOTS.acquire(), timeout=0.3)
+        except asyncio.TimeoutError as exc:
+            raise HTTPException(429, "Processing capacity reached. Please try again.") from exc
+        try:
+            result = await run_in_threadpool(_execute, slug, uploaded, text, validated_options)
+        finally:
+            PROCESS_SLOTS.release()
     except HTTPException:
         raise
     except (ValueError, zipfile.BadZipFile, UnidentifiedImageError) as exc:
