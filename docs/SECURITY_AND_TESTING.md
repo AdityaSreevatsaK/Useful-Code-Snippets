@@ -66,3 +66,7 @@ publicly hosted application. Integration checks remain necessary before merge.
 - Consider a separate local-only CLI for privileged utilities.
 - The DNS validation in website status checks is not a sufficient defence
   for a general-purpose public URL fetcher. Keep it local-only.
+
+## Hugging Face runtime
+
+Hugging Face's legacy built-in Streamlit SDK now injects a conflicting Streamlit version. This Space is deployed as a Docker Space, pinning Python 3.11 and installing `requirements.txt` without Hugging Face overriding Streamlit. The image runs Streamlit as UID 1000 on port 8501. CI builds the image and checks `/_stcore/health` before merging changes.

@@ -3,8 +3,8 @@ title: Utility-Shelf
 emoji: 📦
 colorFrom: blue
 colorTo: green
-sdk: streamlit
-app_file: app.py
+sdk: docker
+app_port: 8501
 pinned: false
 ---
 
@@ -101,3 +101,7 @@ Privileged server operations are disabled on hosted instances. Set `ENABLE_LOCAL
 
 Poppler, a supported speech engine and LibreOffice on Linux are needed by some converters.
 See [security, testing and known limitations](docs/SECURITY_AND_TESTING.md).
+
+### Hugging Face deployment
+
+This Space uses the maintained Docker SDK, with Python 3.11 and Streamlit 1.33.0. The Dockerfile installs system dependencies such as Poppler, LibreOffice and eSpeak. The `main` branch is automatically pushed to the Space through GitHub Actions, where the runtime is checked after deployment.
