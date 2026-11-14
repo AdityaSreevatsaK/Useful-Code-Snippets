@@ -4,6 +4,8 @@ import math
 import struct
 import wave
 
+from pathlib import Path
+
 from PIL import Image
 import pytest
 from pypdf import PdfReader, PdfWriter
@@ -63,7 +65,7 @@ def test_pitch_analyser_returns_statistics(tmp_path):
 
 def test_streamlit_all_navigation_pages():
     from streamlit.testing.v1 import AppTest
-    app = AppTest.from_file("app.py", default_timeout=45).run()
+    app = AppTest.from_file(Path(__file__).resolve().parents[1] / "app.py", default_timeout=45).run()
     assert not app.exception
     pages = [
         "Audio & Speech Processing",
@@ -86,7 +88,7 @@ def test_privileged_controls_are_disabled_on_public_dashboard(monkeypatch):
     monkeypatch.delenv("ENABLE_LOCAL_OPERATIONS", raising=False)
     from streamlit.testing.v1 import AppTest
 
-    app = AppTest.from_file("app.py", default_timeout=45).run()
+    app = AppTest.from_file(Path(__file__).resolve().parents[1] / "app.py", default_timeout=45).run()
     assert not app.exception
     protected = {
         "Automation & Productivity": ("Check Status", "Run Logging Setup"),
@@ -106,7 +108,6 @@ def test_privileged_controls_are_disabled_on_public_dashboard(monkeypatch):
 """Linux image processing integration tests."""
 
 import cv2
-from PIL import Image
 
 from Image_Processing.convert_and_display_grayscale import convert_and_display
 from Image_Processing.resize_all_images_in_folder import resize_all_images_in_folder

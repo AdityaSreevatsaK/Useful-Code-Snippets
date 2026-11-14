@@ -32,9 +32,6 @@ jobs:
       - name: Install auditor
         run: python -m pip install --upgrade pip pip-audit
       - name: Generate Python security audit
-        # Initial audit is informational; once dependencies are remediated
-        # remove continue-on-error to make advisories a required gate.
-        continue-on-error: true
         run: pip-audit -r requirements.txt --progress-spinner off --format json --output dependency-audit.json
       - name: Summarise findings without dumping dependency metadata into logs
         run: |

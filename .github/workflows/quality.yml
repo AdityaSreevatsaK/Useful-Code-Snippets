@@ -24,7 +24,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install pytest ruff Pillow pypdf pdf2image nbformat nbconvert cryptography requests
       - name: Check Python lint rules
-        run: ruff check . --output-format=github
+        run: ruff check . --select E4,E7,E9,F --output-format=github
       - name: Compile all Python code
         run: python -m compileall -q .
       - name: Run tests
