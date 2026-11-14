@@ -1,9 +1,11 @@
 [theme]
 base="light"
-primaryColor="#ffb347"
-backgroundColor="#fffacd"
-secondaryBackgroundColor="#dbff00"
+primaryColor="#375BCB"
+backgroundColor="#F5F8FC"
+secondaryBackgroundColor="#FFFFFF"
+textColor="#17243A"
+font="sans serif"
 
 [server]
-maxUploadSize = 20
-maxMessageSize = 30
+maxUploadSize=20
+maxMessageSize=30
