@@ -69,3 +69,42 @@ jobs:
             echo "FastAPI did not become healthy"
             exit 1
           fi
+
+
+  browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Install lightweight web stack and browser
+        run: |
+          python -m pip install fastapi uvicorn python-multipart Pillow pypdf playwright
+          python -m playwright install --with-deps chromium
+      - name: Start same-origin API and frontend
+        run: |
+          uvicorn server:app --host 127.0.0.1 --port 7860 > /tmp/shelf-server.log 2>&1 &
+          echo $! > /tmp/shelf-server.pid
+          for attempt in $(seq 1 25); do
+            if curl --silent --fail http://127.0.0.1:7860/api/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/shelf-server.log
+          exit 1
+      - name: Verify browser navigation, contrast, execution and mobile layout
+        run: python scripts/browser_smoke.py
+      - name: Upload desktop and mobile screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: v3-browser-screenshots
+          path: /tmp/shelf-browser-shots/
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Log API errors on failure
+        if: failure()
+        run: cat /tmp/shelf-server.log || true
