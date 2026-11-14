@@ -100,18 +100,30 @@ def test_privileged_controls_are_disabled_on_public_dashboard(monkeypatch):
     app = AppTest.from_file(Path(__file__).resolve().parents[1] / "app.py", default_timeout=45).run()
     assert not app.exception
     protected = {
-        "Automation & Productivity": ("Check Status", "Run Logging Setup"),
-        "File Handling": ("Check Disk Usage", "Find Largest File", "Generate Tree"),
-        "Git Utilities": ("Check Git Status", "Get Repos"),
-        "Hugging Face Utilities": ("Delete Folder",),
+        "Automation & Productivity": (
+            ("website-status", "Check Status"),
+            ("logging-setup", "Run Logging Setup"),
+        ),
+        "File Handling": (
+            ("disk-usage", "Check Disk Usage"),
+            ("largest-file", "Find Largest File"),
+            ("file-tree", "Generate Tree"),
+        ),
+        "Git Utilities": (
+            ("git-status", "Check Git Status"),
+            ("github-repos", "Get Repos"),
+        ),
+        "Hugging Face Utilities": (("hf-delete-folder", "Delete Folder"),),
     }
-    for section, labels in protected.items():
+    for section, items in protected.items():
         app.sidebar.radio[0].set_value(section).run()
         assert not app.exception, section
-        for label in labels:
+        for slug, label in items:
+            app.selectbox[0].set_value(slug).run()
+            assert not app.exception, (section, slug)
             buttons = [button for button in app.button if button.label == label]
-            assert len(buttons) == 1, (section, label)
-            assert buttons[0].disabled, (section, label)
+            assert len(buttons) == 1, (section, slug, label)
+            assert buttons[0].disabled, (section, slug, label)
 
 
 
@@ -140,9 +152,69 @@ def test_streamlit_regex_input_and_validation():
 
     app = AppTest.from_file(Path(__file__).resolve().parents[1] / "app.py", default_timeout=45).run()
     app.sidebar.radio[0].set_value("Regex Cheatsheet").run()
+    app.selectbox[0].set_value("validate-email").run()
     assert not app.exception
 
     app.text_input[0].set_value("bad@example..com").run()
     next(button for button in app.button if button.label == "Validate").click().run()
     assert not app.exception
     assert len(app.error) == 1
+
+
+
+def test_dashboard_home_search_and_tool_navigation():
+    from streamlit.testing.v1 import AppTest
+
+    app = AppTest.from_file(Path(__file__).resolve().parents[1] / "app.py", default_timeout=45).run()
+    assert not app.exception
+    assert app.sidebar.radio[0].value == "Overview"
+    app.text_input[0].set_value("PDF DOCX").run()
+    assert not app.exception
+    assert len([button for button in app.button if button.label == "Open tool"]) == 2
+
+    app.text_input[0].set_value("nonexistentcategorytool").run()
+    assert not app.exception
+    assert len([button for button in app.button if button.label == "Open tool"]) == 0
+
+
+def test_workspace_selection_and_code_tab_render():
+    from streamlit.testing.v1 import AppTest
+
+    app = AppTest.from_file(Path(__file__).resolve().parents[1] / "app.py", default_timeout=45).run()
+    app.sidebar.radio[0].set_value("Regex Cheatsheet").run()
+    app.selectbox[0].set_value("extract-dates").run()
+    assert not app.exception
+    assert "extract-dates" == app.session_state["shelf_active_tool"]
+
+
+
+def test_open_tool_from_search_and_favourites():
+    from streamlit.testing.v1 import AppTest
+
+    app = AppTest.from_file(Path(__file__).resolve().parents[1] / "app.py", default_timeout=45).run()
+    app.text_input[0].set_value("normalise spaces").run()
+    open_button = next(button for button in app.button if button.key == "open_all_remove-spaces")
+    open_button.click().run()
+    assert not app.exception
+    assert app.sidebar.radio[0].value == "Regex Cheatsheet"
+    assert app.session_state["shelf_active_tool"] == "remove-spaces"
+
+    favourite = next(button for button in app.button if button.label == "☆ Favourite")
+    favourite.click().run()
+    assert "remove-spaces" in app.session_state["shelf_favourites"]
+
+
+def test_text_result_persists_after_tool_switch():
+    from streamlit.testing.v1 import AppTest
+
+    app = AppTest.from_file(Path(__file__).resolve().parents[1] / "app.py", default_timeout=45).run()
+    app.sidebar.radio[0].set_value("Regex Cheatsheet").run()
+    app.selectbox[0].set_value("upper-case").run()
+    next(button for button in app.button if button.label == "Capitalise").click().run()
+    assert not app.exception
+    saved = app.session_state["shelf_values"]["upper-case"]
+    assert "IMPORTANT DATES" in saved
+    app.selectbox[0].set_value("lower-case").run()
+    app.selectbox[0].set_value("upper-case").run()
+    assert not app.exception
+    assert app.session_state["shelf_values"]["upper-case"] == saved

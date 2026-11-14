@@ -93,6 +93,12 @@ It serves as a handy reference for automating, optimising, and simplifying commo
 
 ---
 
+## Dashboard v2
+
+The dashboard now includes a searchable 34-tool catalogue, eight categories, focused workspaces, light and dark visual modes, source-code previews, per-session favourites/recent tools and persistent downloadable outputs. The underlying Python snippets remain usable without Streamlit.
+
+See [Dashboard v2 architecture and usage](docs/DASHBOARD_V2.md).
+
 ## Running the dashboard
 
 Install the dependencies using `pip install -r requirements.txt`, then run `streamlit run app.py`.
