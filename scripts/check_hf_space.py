@@ -48,7 +48,7 @@ def check_space(repo: str, expected_sha: str, attempts: int = 24, interval: int 
                     return True
                 subdomain = data.get("subdomain")
                 if subdomain:
-                    health_url = f"https://{subdomain}.hf.space/_stcore/health"
+                    health_url = f"https://{subdomain}.hf.space/api/health"
                     if http_healthy(health_url):
                         print("Space runtime health endpoint returned HTTP 200.", flush=True)
                         return True

@@ -1,77 +1,89 @@
-# Useful Code Snippets: project guide for maintainers and AI agents
+# Utility Shelf: guide for maintainers and AI engineering agents
 
-## Purpose and boundaries
+## Mission
 
-Useful Code Snippets is both a library of independently importable Python
-utilities and a public Streamlit dashboard called **Utility-Shelf**.
-Preserve snippets' importable function APIs unless changes are tested and
-documented. Keep user-uploaded processing available on the hosted dashboard,
-but keep privileged operations local-only.
+Utility Shelf is a professional browser workspace built around **34 reusable
+Python utilities**. It supports file, image, document, audio and text workflows.
+Preserve the original functions and API compatibility; never trade safety or
+test coverage for superficial visual changes.
 
-## Sources of truth
+## Current production architecture
 
-- \`README.md\`: project index and Hugging Face Space YAML front matter.
-- \`app.py\`: Streamlit user interface and section routing.
-- \`requirements.txt\`: Python 3.11 runtime dependency pins.
-- \`Dockerfile\`: Hugging Face Space container, non-root user, port 8501.
-- \`.github/workflows/deploy.yml\`: pushes \`main\` to the live Space; health check.
-- \`.github/workflows/integration.yml\`: Linux converters, Streamlit and Docker smoke tests.
-- \`.github/workflows/quality.yml\`: portable Python tests and compilation.
-- \`.github/workflows/security.yml\`: newly committed secrets and dependency audit.
-- \`docs/SECURITY_AND_TESTING.md\`: deployment safety, limits and residual risks.
+- server.py is the FastAPI application. Uvicorn serves port **7860**.
+- web/index.html and web/assets/ form a responsive frontend with native
+  HTML, CSS and JavaScript. It needs no npm installation.
+- dashboard_catalogue.py is the 34-tool metadata catalogue, shared with
+  the old Streamlit implementation.
+- Original Python packages implement the underlying conversion functions.
+- Dockerfile installs required system dependencies; the app runs as UID 1000.
+- Hugging Face Space metadata in README.md specifies sdk: docker and
+  app_port: 7860.
+- scripts/check_hf_space.py checks the exact deployed commit SHA and
+  /api/health. GitHub Actions deploys main only.
+- app.py, dashboard_handlers.py and dashboard_style.py are legacy
+  Streamlit implementation files, kept temporarily for rollback.
+  They are **not** the production entrypoint.
 
-## Architecture
+See docs/PRODUCTION_ARCHITECTURE.md for route contracts, frontend behaviour,
+system diagrams, security limits, tests, and rollback instructions.
 
-\`\`\`text
-main branch (GitHub)
-  ├── app.py (Streamlit)
-  │   ├── Audio_Speech_Processing/
-  │   ├── Automation_Productivity/
-  │   ├── File_Handling/
-  │   ├── Git_Utilities/
-  │   ├── HuggingFace_Utilities/
-  │   ├── Image_Processing/
-  │   ├── Jupyter_Notebook_Utilities/
-  │   └── Regex_Cheatsheet/
-  ├── tests/ (unit and Linux integration)
-  └── GitHub Actions deploy → Hugging Face Docker Space
-\`\`\`
+## API boundaries
 
-Functions should return useful values rather than print to server stdout.
-The dashboard should handle errors and let users download generated files.
-Convert documents inside temporary directories. Do not write uploaded paths
-directly to host filenames or allow hostile ZIP members.
+Only allow tools declared in dashboard_catalogue.py. Never accept arbitrary
+server paths, Python expressions, URLs or shell commands as executable API
+inputs. All tools marked local_only must return 403 to API execution
+requests, **even if ENABLE_LOCAL_OPERATIONS=1** is set by mistake.
 
-## High-risk controls
+HTTP endpoints:
+- GET /api/health
+- GET /api/tools
+- GET /api/tools/{slug}/source
+- POST /api/tools/{slug}/run
+- GET /, GET /tools/{slug}, GET /assets/... for the UI
 
-\`ENABLE_LOCAL_OPERATIONS=1\` enables filesystem inspection, URL probing,
-Git operations and token-based Hugging Face deletion. Never enable it in
-production or other publicly accessible deployments. GitHub and HF tokens
-must remain request-scoped. No credentials belong in repo files.
+The source viewer is based exclusively on pre-approved catalogue paths.
+Uploads are limited to 20 MiB each, 40 MiB total, 30 files, 50 PDF pages
+and 25 million image pixels. ZIP entry names and decompression limits
+must be validated. File processing uses temporary directories and never
+needs database credentials. Processing concurrency is capped.
 
-The earlier public \`secret.key\` was removed from the current checkout,
-**not historical commits**. It may require rotating any keys used by real
-encrypted data and potentially re-encrypting datasets. Never rewrite Git
-history or rotate private secrets without an impact plan and the owner's
-explicit approval.
+## Product UX principles
 
-## Development and checks
+The first objective is a legible, efficient professional tool workspace.
+Both themes must ensure sufficient foreground/background contrast on text
+areas, inputs, buttons, dropdowns, focus rings and notices. Avoid global CSS
+selectors that inadvertently override native controls. Preserve keyboard
+search (Ctrl+K or Command+K), responsive mobile navigation, meaningful
+empty states, tool previews and visible results.
 
-1. Branch from \`main\`. Avoid direct production changes.
-2. \`python -m pip install -r requirements.txt pytest ruff pip-audit\`
-3. \`ruff check .\`
-4. \`python -m pytest -q --ignore=tests/test_integration_runtime.py\`
-5. Run Linux converter integration checks and build the Docker image in CI.
-6. Review GitHub checks, then merge through a PR. This triggers production
-   deployment and the post-push Space health check.
+Favourites and recent-tool metadata are stored in browser localStorage.
+User-generated contents, uploads and outputs **must not** be put there.
+They remain ephemeral in the browser tab and server temporary directory.
 
-**Cost control:** CI runs on PRs rather than on both push and PR. Docker and
-Linux smoke tests intentionally run on the same PR; avoid redundant reruns.
+## Development, checks and delivery
 
-## Current Phase 3 focus
+1. Branch from main. No unreviewed production changes.
+2. Install Python 3.11 with requirements.txt and pytest, httpx and Ruff.
+3. Run Ruff and the Python test suite.
+4. Check JavaScript syntax with node --check web/assets/app.js.
+5. Run tests/test_web_api.py and tests/test_integration_runtime.py.
+6. CI performs Chrome desktop/mobile smoke tests and contrast checks,
+   including screenshot artefacts, plus Docker build/health checks.
+7. Keep Gitleaks and pip-audit checks green before merging a PR.
+8. After merge, check Hugging Face RUNNING, expected Git SHA and HTTP 200
+   from /api/health. Inspect the live embedded app before closing.
 
-Modernise dependencies without breaking the working Docker environment,
-add secret and dependency scanning, expand regression tests, remove tracked
-IDE files, improve errors and type annotations, and document remaining risks.
-The visual redesign is a separate Phase 4 and should not be mixed into
-security-focused changes.
+The historical secret.key exposure is **not** fixed by this redesign.
+Rotate any real-world encryption keys and re-encrypt affected data. A
+history rewrite requires explicit approval and coordination.
+
+## Cautions and ongoing hardening
+
+- Server-side processing of untrusted content is a security-sensitive
+  workload. The concurrency cap does not provide full multi-tenant
+  sandboxing or external request throttling.
+- The current Docker image contains Streamlit dependencies for legacy
+  test compatibility; remove them only in a separate tested PR.
+- Do not publish private tokens or upload user data to third-party
+  analytics products.
+- Keep related changes in their own PRs, preserving rollback paths.

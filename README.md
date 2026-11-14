@@ -4,110 +4,54 @@ emoji: 📦
 colorFrom: blue
 colorTo: green
 sdk: docker
-app_port: 8501
+app_port: 7860
 pinned: false
 ---
 
 <!-- This metadata block is for Hugging Face Spaces -->
 
-# <p align="center">Useful Code Snippets</p>
+# Utility Shelf
 
-Useful-Code-Snippets is a collection of practical and reusable code snippets for various everyday programming tasks.
-It serves as a handy reference for automating, optimising, and simplifying common operations across different domains.
+**A professional workspace for practical Python utilities.**
 
-## List of code snippets
+[Live application](https://huggingface.co/spaces/AdityaSreevatsaK/Utility-Shelf) | [Architecture](docs/PRODUCTION_ARCHITECTURE.md) | [Security](SECURITY.md)
 
-### Audio & Speech Processing
+Utility Shelf offers 34 independent Python tools, searchable in a responsive application for files, images, audio, text and developer workflows.
 
-✦ [Pitch Analyzer](Audio_Speech_Processing/analyse_pitch.py)<br />
-✦ [Text to Speech Conversion](Audio_Speech_Processing/text_to_speech.py)<br />
+## Product features
 
----
+- Searchable catalogue and command launcher using Ctrl+K
+- Dedicated workspaces, clear form controls, previews and downloads
+- High-contrast light and dark themes with mobile-friendly layouts
+- Favourites and recent tools saved locally in your browser
+- Source-code viewer with copy support, linked to the standalone Python modules
+- Upload processing in temporary directories, with no persistent file storage
+- Privileged local utilities available as reference only, never through the public API
 
-### Automation & Productivity
+## Architecture
 
-✦ [Logging Setup](Automation_Productivity/logging_setup.py)<br />
-✦ [Website Online Status](Automation_Productivity/webpage_online_status.py)<br />
+| Layer | Implementation |
+| --- | --- |
+| Frontend | HTML, CSS, modular browser JavaScript, no external frontend packages |
+| API | FastAPI + Uvicorn, same-origin requests |
+| Processing | Standalone Python utilities |
+| Deployment | Python 3.11 Docker Space, port 7860 |
+| Quality | API tests, Python regressions, Docker health, secret and dependency scanning |
 
----
+The previous Streamlit dashboard is retained as legacy reference and a rollback option. **The deployed application runs FastAPI, not Streamlit.**
 
-### File Handling
+## Local development
 
-✦ [Convert PDF to images](File_Handling/convert_pdf_to_images.py)<br />
-✦ [Convert PDF to Word Document](File_Handling/convert_pdf_to_word.py) <br />
-✦ [Convert Word Document to PDF](File_Handling/convert_word_doc_to_pdf.py) <br />
-✦ [Disk Space Usage](File_Handling/check_disk_usage.py)<br />
-✦ [Encrypt & Decrypt Files](File_Handling/encrypt_decrypt_files.py)<br />
-✦ [File Compression and ZIP Expansion](File_Handling/compress_expand_files.py)<br />
-✦ [Generate File Tree as Text](File_Handling/generate_file_tree.py)<br />
-✦ [Get Max File Size in Directory](File_Handling/get_max_file_size.py)<br />
-✦ [Merge Multiple PDFs into One](File_Handling/merge_pdfs_in_folder.py)<br />
-✦ [Recursively Unzip and Delete](File_Handling/recursively_unzip_and_delete.py)<br />
-✦ [Split PDF into Single Pages](File_Handling/split_pdf.py)<br />
+Use Python 3.11.
 
----
+1. Install dependencies: python -m pip install -r requirements.txt
+2. Start the server: uvicorn server:app --host 127.0.0.1 --port 7860 --reload
+3. Open http://127.0.0.1:7860
 
-### Git Utilities
+Some document and speech tools additionally require Poppler, LibreOffice, eSpeak and FFmpeg.
 
-✦ [Check Git Repo Status](Git_Utilities/check_git_repo_status.py)<br />
-✦ [Get Names of All Repos on GitHub Profile](Git_Utilities/get_github_repos.py)<br />
-✦ [Useful Git Commands](Git_Utilities/Useful%20Git%20Commands.md)<br />
+Run tests using pytest -q tests/test_web_api.py. See [architecture and operating notes](docs/PRODUCTION_ARCHITECTURE.md).
 
----
+## Contributing
 
-### Hugging Face Utilities
-
-✦ [Delete Folders From HuggingFace Repo](HuggingFace_Utilities/delete_folder_on_hub.py)<br />
-
----
-
-### Image Processing
-
-✦ [Convert Image to Grayscale](Image_Processing/convert_and_display_grayscale.py)<br />
-✦ [Compress Images](Image_Processing/compress_image_by_percentage.py)<br />
-✦ [Convert Image Format](Image_Processing/convert_image_format.py)<br />
-✦ [Resize all images in a folder](Image_Processing/resize_all_images_in_folder.py)<br />
-
----
-
-### Jupyter Notebook Utilities
-
-✦ [Convert Jupyter Notebook to a Cleaned Python File](Jupyter_Notebook_Utilities/convert_notebook_to_clean_py.py)<br />
-✦ [Embed a YouTube Video into Jupyter Notebook](Jupyter_Notebook_Utilities/embed_youtube_video.py)<br />
-
----
-
-### Regex Cheatsheet
-
-✦ [Convert Text to Lower Case](Regex_Cheatsheet/convert_text_to_lower_case.py)<br />
-✦ [Convert Text to Sentence Case](Regex_Cheatsheet/convert_text_to_sentence_case.py)<br />
-✦ [Convert Text to Upper Case](Regex_Cheatsheet/convert_text_to_upper_case.py)<br />
-✦ [Extract Dates](Regex_Cheatsheet/extract_dates.py)<br />
-✦ [Extract Hashtags](Regex_Cheatsheet/extract_hashtags.py)<br />
-✦ [Extract URLs](Regex_Cheatsheet/extract_urls.py)<br />
-✦ [Find Phone Numbers](Regex_Cheatsheet/find_phone_numbers.py)<br />
-✦ [Remove Extra Spaces](Regex_Cheatsheet/remove_extra_spaces.py)<br />
-✦ [Validate Email](Regex_Cheatsheet/validate_email.py)<br />
-
----
-
----
-
-## Dashboard v2
-
-The dashboard now includes a searchable 34-tool catalogue, eight categories, focused workspaces, light and dark visual modes, source-code previews, per-session favourites/recent tools and persistent downloadable outputs. The underlying Python snippets remain usable without Streamlit.
-
-See [Dashboard v2 architecture and usage](docs/DASHBOARD_V2.md).
-
-## Running the dashboard
-
-Install the dependencies using `pip install -r requirements.txt`, then run `streamlit run app.py`.
-
-Privileged server operations are disabled on hosted instances. Set `ENABLE_LOCAL_OPERATIONS=1` only for a trusted local instance (PowerShell: `$env:ENABLE_LOCAL_OPERATIONS = "1"`).
-
-Poppler, a supported speech engine and LibreOffice on Linux are needed by some converters.
-See [security, testing and known limitations](docs/SECURITY_AND_TESTING.md).
-
-### Hugging Face deployment
-
-This Space uses the maintained Docker SDK, with Python 3.11 and Streamlit 1.67.0. The Dockerfile installs system dependencies such as Poppler, LibreOffice and eSpeak. The `main` branch is automatically pushed to the Space through GitHub Actions, where the runtime is checked after deployment.
+Preserve standalone APIs and add regression tests. Do not expose filesystem inspection, arbitrary URL access, tokens or destructive operations through the public web API. See [LICENSE](LICENSE).
