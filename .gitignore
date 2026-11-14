@@ -175,3 +175,8 @@ cython_debug/
 
 # Env file
 /.env
+
+# Never commit credentials or local editor state
+secret.key
+*.secret
+.idea/

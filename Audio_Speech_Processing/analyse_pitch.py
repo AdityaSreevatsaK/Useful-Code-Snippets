@@ -1,64 +1,38 @@
-import pathlib
-import sys
+"""Estimate fundamental frequency from an audio recording."""
+
+from pathlib import Path
 
 import librosa
 import numpy as np
-import sounddevice as sd
 
 
-def analyse_pitch(audio_path_str):
-    # 1. Locate Audio File
-    AUDIO_PATH = pathlib.Path(audio_path_str)
-
-    if not AUDIO_PATH.exists():
-        sys.exit(f"File not found: {AUDIO_PATH}")
-
-    print(f"Loading  ➜  {AUDIO_PATH.name}")
-    wav, sr = librosa.load(AUDIO_PATH, sr=None, mono=True)  # audioread handles MP3, AAC, WAV, FLAC …
-
-    dur = len(wav) / sr
-    print(f"Duration  : {dur:.2f} s  |  Sample-rate: {sr} Hz")
-
-    # 2. Pitch-tracking (librosa.pyin)
-    LOW_NOTE = 'C2'  # ≈65 Hz
-    HIGH_NOTE = 'C6'  # ≈1 kHz
-
-    print("Analyzing pitch…")
-    f0, voiced_flag, _ = librosa.pyin(
-        wav,
-        fmin=librosa.note_to_hz(LOW_NOTE),
-        fmax=librosa.note_to_hz(HIGH_NOTE),
-        sr=sr
+def analyse_pitch(audio_path_str: str) -> dict:
+    """Return JSON-compatible pitch statistics and write a sibling text report."""
+    source = Path(audio_path_str)
+    if not source.is_file():
+        raise FileNotFoundError(source)
+    samples, sample_rate = librosa.load(str(source), sr=None, mono=True)
+    if not len(samples) or sample_rate <= 0:
+        raise ValueError("Audio recording is empty")
+    frequency, is_voiced, _ = librosa.pyin(
+        samples, fmin=librosa.note_to_hz("C2"),
+        fmax=librosa.note_to_hz("C6"), sr=sample_rate,
     )
-    vf0 = f0[voiced_flag]
-
-    if vf0.size == 0:
-        sys.exit("No voiced frames detected. Try a cleaner recording or adjust fmin/fmax.")
-
-    stats = {
-        "mean_Hz": float(np.nanmean(vf0)),
-        "median_Hz": float(np.nanmedian(vf0)),
-        "min_Hz": float(np.nanmin(vf0)),
-        "max_Hz": float(np.nanmax(vf0))
+    voiced = frequency[is_voiced] if is_voiced is not None else np.array([])
+    voiced = voiced[np.isfinite(voiced)]
+    if not len(voiced):
+        raise ValueError("No voiced frames detected")
+    result = {
+        "mean_Hz": float(np.mean(voiced)),
+        "median_Hz": float(np.median(voiced)),
+        "min_Hz": float(np.min(voiced)),
+        "max_Hz": float(np.max(voiced)),
+        "duration_seconds": float(len(samples) / sample_rate),
+        "sample_rate_Hz": int(sample_rate),
     }
-
-    print("\nFundamental-frequency summary:")
-    for k, v in stats.items():
-        print(f"  {k:<10} : {v:7.1f} Hz")
-
-    # 3. Save a text report next to the audio
-    report_path = AUDIO_PATH.with_suffix(".pitch.txt")
-    report = {}
-    with open(report_path, "w", encoding="utf-8") as f:
-        report['File'] = AUDIO_PATH.name
-        f.write(f"File: {AUDIO_PATH.name}\n")
-        report['Duration'] = dur
-        f.write(f"Duration: {dur:.2f} s\n")
-        report['Sample-rate'] = sr
-        f.write(f"Sample-rate: {sr} Hz\n")
-        for k, v in stats.items():
-            report[k] = f"{v} Hz"
-            f.write(f"{k:<10}: {v:7.1f} Hz\n")
-
-    print(f"\n✅ Pitch report saved ➜  {report_path}")
-    return report_path
+    report_path = source.with_suffix(".pitch.txt")
+    report_path.write_text(
+        "\n".join(f"{key}: {value}" for key, value in result.items()) + "\n",
+        encoding="utf-8",
+    )
+    return result

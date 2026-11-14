@@ -1,26 +1,10 @@
+"""Convert a PDF to images in memory, without writing to the server cwd."""
+
 from pdf2image import convert_from_path
 
 
-# Additional requirement:
-# Install Poppler. Download it from https://github.com/oschwartz10612/poppler-windows/releases/
-# Extract the contents of the zip file and add the path to the bin folder to the system environment variable PATH.
-
-def convert_pdf_to_images(folder_path: str):
-    """
-        Description:
-            This function converts each page of a PDF file to images.
-
-        Args:
-            folder_path: The path to the folder containing the PDF file.
-
-        Returns:
-            None
-    """
-    images = convert_from_path(folder_path)
-
-    for i, image in enumerate(images):
-        image.save(f'page_{i + 1}.png', 'PNG')
-
-
-# pdf_path = 'Folder path'
-# convert_pdf_to_images(pdf_path)
+def convert_pdf_to_images(pdf_path: str, dpi: int = 120):
+    """Return one Pillow image per page. Requires Poppler on PATH."""
+    if dpi < 30 or dpi > 300:
+        raise ValueError("DPI must be between 30 and 300")
+    return convert_from_path(pdf_path, dpi=dpi, fmt="png")
