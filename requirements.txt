@@ -18,3 +18,4 @@ sounddevice==0.4.6
 opencv-python-headless==4.9.0.80
 matplotlib==3.8.0
 numpy==1.26.4
+cryptography>=42

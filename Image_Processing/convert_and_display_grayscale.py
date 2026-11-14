@@ -20,6 +20,8 @@ def convert_and_display(image_path: str, output_path: str = "Grayscale.png") -> 
     """
     # Read the image
     image = cv2.imread(image_path)
+    if image is None:
+        raise ValueError("Unable to decode image")
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     cv2.imwrite(output_path, gray_image)
 
@@ -40,7 +42,7 @@ def convert_and_display(image_path: str, output_path: str = "Grayscale.png") -> 
     plt.axis("off")
 
     plt.suptitle("Original Image vs Grayscale Image.")
-    plt.show()
+    plt.close()
     return gray_image
 
 

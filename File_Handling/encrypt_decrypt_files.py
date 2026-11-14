@@ -1,23 +1,34 @@
-# from cryptography.fernet import Fernet
-#
-# # Generate and save key
-# key = Fernet.generate_key()
-# with open('secret.key', 'wb') as key_file:
-#     key_file.write(key)
-#
-# # Load key
-# with open('secret.key', 'rb') as key_file:
-#     key = key_file.read()
-#
-# # Encrypt
-# f = Fernet(key)
-# with open('file.txt', 'rb') as file:
-#     encrypted = f.encrypt(file.read())
-# with open('file.txt.encrypted', 'wb') as encrypted_file:
-#     encrypted_file.write(encrypted)
-#
-# # Decrypt
-# with open('file.txt.encrypted', 'rb') as encrypted_file:
-#     decrypted = f.decrypt(encrypted_file.read())
-# with open('file_decrypted.txt', 'wb') as decrypted_file:
-#     decrypted_file.write(decrypted)
+"""Explicit Fernet encryption helpers.
+
+Keys are intentionally never generated or saved during module import.
+Do not commit generated keys to a public repository.
+"""
+
+from pathlib import Path
+
+from cryptography.fernet import Fernet
+
+
+def generate_key() -> bytes:
+    """Generate a key that should be stored in a secure secrets manager."""
+    return Fernet.generate_key()
+
+
+def encrypt_file(source_path: str, output_path: str, key: bytes) -> None:
+    """Encrypt file bytes using the supplied Fernet key."""
+    source = Path(source_path)
+    destination = Path(output_path)
+    if source.resolve() == destination.resolve():
+        raise ValueError("Source and destination must be different")
+    payload = Fernet(key).encrypt(source.read_bytes())
+    destination.write_bytes(payload)
+
+
+def decrypt_file(source_path: str, output_path: str, key: bytes) -> None:
+    """Decrypt a Fernet-encrypted file, or raise InvalidToken for a wrong key."""
+    source = Path(source_path)
+    destination = Path(output_path)
+    if source.resolve() == destination.resolve():
+        raise ValueError("Source and destination must be different")
+    payload = Fernet(key).decrypt(source.read_bytes())
+    destination.write_bytes(payload)

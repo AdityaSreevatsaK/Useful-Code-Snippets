@@ -547,7 +547,9 @@ elif selection == "Image Processing":
                 # Create a zip file in memory to download the resized images
                 zip_buffer = io.BytesIO()
                 with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zipf:
-                    for image_file in folder_images:
+                    for index, image_file in enumerate(folder_images, 1):
+                        if not upload_is_valid(image_file):
+                            st.stop()
                         # Process each image
                         img = Image.open(image_file)
                         new_size = (max(1, round(img.width * resize_percentage / 100)), max(1, round(img.height * resize_percentage / 100)))
@@ -559,7 +561,7 @@ elif selection == "Image Processing":
                         img_byte_arr = img_byte_arr.getvalue()
 
                         # Add the resized image to the zip file
-                        zipf.writestr(image_file.name, img_byte_arr)
+                        zipf.writestr(f"{index:03d}_{safe_upload_name(image_file.name)}", img_byte_arr)
 
                 st.success(f"{len(folder_images)} image(s) resized successfully!")
                 st.download_button(
