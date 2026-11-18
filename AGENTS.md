@@ -19,7 +19,7 @@ test coverage for superficial visual changes.
 - Hugging Face Space metadata in README.md specifies sdk: docker and
   app_port: 7860.
 - scripts/check_hf_space.py checks the exact deployed commit SHA and
-  /api/health. GitHub Actions deploys main only.
+  /api/health. GitHub Actions accepts `main` and `master` during migration, publishes the checked-out commit to the Hugging Face `main` branch, and checks the deployed SHA.
 - app.py, dashboard_handlers.py and dashboard_style.py are legacy
   Streamlit implementation files, kept temporarily for rollback.
   They are **not** the production entrypoint.
@@ -62,7 +62,7 @@ They remain ephemeral in the browser tab and server temporary directory.
 
 ## Development, checks and delivery
 
-1. Branch from main. No unreviewed production changes.
+1. Branch from the current GitHub default branch (`main` until explicitly renamed to `master`). No unreviewed production changes.
 2. Install Python 3.11 with requirements.txt and pytest, httpx and Ruff.
 3. Run Ruff and the Python test suite.
 4. Check JavaScript syntax with node --check web/assets/app.js.
