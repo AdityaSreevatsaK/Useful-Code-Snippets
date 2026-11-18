@@ -65,13 +65,21 @@ resource quotas or abuse monitoring for a large-scale public service.
 - Docker smoke: builds production image, validates /api/health and /api/tools
   and confirms frontend HTML and JavaScript are served.
 - Gitleaks scans the current tree; pip-audit checks Python dependencies.
-- After merging, GitHub Actions deploys main to the Space and confirms its
-  exact Git SHA and HTTP /api/health response.
+- After merging, GitHub Actions deploys the checked-out GitHub commit to the
+  Hugging Face Space's `main` branch and confirms its exact Git SHA and HTTP
+  /api/health response.
 
 ## Deployment and rollback
 
-Deployment happens only from the GitHub main branch. Work on separate branches
-with PR checks; do not overwrite production or force-push a Space unexpectedly.
+During the transition, deployment triggers on pushes to either GitHub `main` or
+`master`. GitHub currently uses `main`; when its default branch is renamed to
+`master`, deployment will continue to work without requiring a Hugging Face
+branch rename. The workflow publishes the checked-out commit using
+`git push hf HEAD:main`, keeping the Hugging Face Space on `main`.
+
+Work on separate branches with PR checks; do not overwrite production or
+force-push a Space unexpectedly. After verifying the renamed GitHub branch's
+first successful deployment, remove the unused GitHub `main` trigger.
 Because the previous Streamlit frontend remains in the repository, rollback
 can be performed by reverting the v3 deployment commit, restoring the previous
 Dockerfile, port and health endpoint. Validate the old container before a
